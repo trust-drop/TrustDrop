@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#080c18"/>
+      <stop offset="100%" style="stop-color:#0b1022"/>
+    </linearGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#1e293b" stroke-width="0.35" opacity="0.2"/>
+    </pattern>
+
+    <!-- Glows -->
+    <filter id="gG" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#22c55e" flood-opacity="0.45"/><feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="gB" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#3b82f6" flood-opacity="0.45"/><feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="gY" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#eab308" flood-opacity="0.4"/><feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="gC" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#06b6d4" flood-opacity="0.45"/><feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="gR" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feFlood flood-color="#ef4444" flood-opacity="0.45"/><feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="gP" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#a855f7" flood-opacity="0.4"/><feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.45"/></filter>
+
+    <!-- Arrow markers -->
+    <marker id="aW" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#334155"/></marker>
+    <marker id="aG" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22c55e"/></marker>
+    <marker id="aB" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#3b82f6"/></marker>
+    <marker id="aY" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#eab308"/></marker>
+    <marker id="aC" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#06b6d4"/></marker>
+    <marker id="aR" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#ef4444"/></marker>
+    <marker id="aP" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#a855f7"/></marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="620" fill="url(#bg)"/>
+  <rect width="960" height="620" fill="url(#grid)"/>
+
+  <!-- Title -->
+  <text x="480" y="36" text-anchor="middle" fill="#f1f5f9" font-size="20" font-weight="700" letter-spacing="2">HOW TRUSTDROP WORKS</text>
+  <text x="480" y="56" text-anchor="middle" fill="#64748b" font-size="10.5" letter-spacing="2">ZERO-KNOWLEDGE SECRET SHARING IN 6 STEPS</text>
+  <line x1="340" y1="66" x2="620" y2="66" stroke="#3b82f6" stroke-width="1" opacity="0.25"/>
+
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  SENDER SIDE (Steps 1–3) - Top Row              -->
+  <!-- ═══════════════════════════════════════════════ -->
+
+  <!-- Subtle "SENDER" lane label -->
+  <text x="38" y="98" fill="#22c55e" font-size="9" font-weight="600" letter-spacing="2" opacity="0.5">SENDER</text>
+
+  <!-- ──── STEP 1: Write Secret ──── -->
+  <g>
+    <rect x="32" y="110" width="250" height="120" rx="12" fill="#0b1a12" stroke="#22c55e" stroke-width="1.2" filter="url(#shadow)"/>
+    <!-- Step badge -->
+    <circle cx="56" cy="134" r="12" fill="#0b1a12" stroke="#22c55e" stroke-width="1.5" filter="url(#gG)"/>
+    <text x="56" y="138" text-anchor="middle" fill="#22c55e" font-size="11" font-weight="800">1</text>
+    <text x="76" y="139" fill="#22c55e" font-size="13" font-weight="700">Write Your Secret</text>
+
+    <!-- Illustration: text input -->
+    <rect x="52" y="156" width="210" height="28" rx="5" fill="#0f2618" stroke="#22c55e" stroke-width="0.7" opacity="0.8"/>
+    <text x="64" y="174" fill="#4ade80" font-size="10" font-family="'SF Mono','Fira Code','Consolas',monospace" opacity="0.8">db_password = s3cr3t!</text>
+    <circle cx="248" cy="170" r="3" fill="#22c55e" opacity="0.5"/>
+
+    <text x="52" y="206" fill="#94a3b8" font-size="9.5">Enter any sensitive text — passwords,</text>
+    <text x="52" y="220" fill="#94a3b8" font-size="9.5">API keys, credentials, private notes.</text>
+  </g>
+
+  <!-- Arrow 1→2 -->
+  <line x1="286" y1="170" x2="340" y2="170" stroke="#22c55e" stroke-width="1.8" marker-end="url(#aG)" opacity="0.6"/>
+
+  <!-- ──── STEP 2: Encrypt in Browser ──── -->
+  <g>
+    <rect x="348" y="110" width="250" height="120" rx="12" fill="#0c1630" stroke="#3b82f6" stroke-width="1.2" filter="url(#shadow)"/>
+    <circle cx="372" cy="134" r="12" fill="#0c1630" stroke="#3b82f6" stroke-width="1.5" filter="url(#gB)"/>
+    <text x="372" y="138" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="800">2</text>
+    <text x="392" y="139" fill="#60a5fa" font-size="13" font-weight="700">Encrypted in Browser</text>
+
+    <!-- Lock icon -->
+    <rect x="446" y="162" width="36" height="26" rx="5" fill="#0c1630" stroke="#3b82f6" stroke-width="1.5"/>
+    <path d="M453 162 L453 155 A11 11 0 0 1 475 155 L475 162" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+    <circle cx="464" cy="176" r="3" fill="#60a5fa"/>
+    <line x1="464" y1="179" x2="464" y2="184" stroke="#60a5fa" stroke-width="1.5"/>
+
+    <rect x="368" y="198" width="82" height="18" rx="4" fill="#3b82f6" opacity="0.1" stroke="#3b82f6" stroke-width="0.6"/>
+    <text x="409" y="211" text-anchor="middle" fill="#60a5fa" font-size="9" font-weight="600">AES-256-GCM</text>
+    <text x="456" y="211" fill="#64748b" font-size="9">client-side</text>
+  </g>
+
+  <!-- Arrow 2→3 -->
+  <line x1="602" y1="170" x2="656" y2="170" stroke="#3b82f6" stroke-width="1.8" marker-end="url(#aB)" opacity="0.6"/>
+
+  <!-- ──── STEP 3: Get Shareable Link ──── -->
+  <g>
+    <rect x="664" y="110" width="262" height="120" rx="12" fill="#1a1708" stroke="#eab308" stroke-width="1.2" filter="url(#shadow)"/>
+    <circle cx="688" cy="134" r="12" fill="#1a1708" stroke="#eab308" stroke-width="1.5" filter="url(#gY)"/>
+    <text x="688" y="138" text-anchor="middle" fill="#eab308" font-size="11" font-weight="800">3</text>
+    <text x="708" y="139" fill="#eab308" font-size="13" font-weight="700">Get Shareable Link</text>
+
+    <!-- URL representation -->
+    <rect x="684" y="156" width="222" height="28" rx="5" fill="#1a1506" stroke="#eab308" stroke-width="0.7" opacity="0.8"/>
+    <text x="696" y="174" fill="#60a5fa" font-size="9" font-family="'SF Mono','Fira Code','Consolas',monospace">trustdrop.co/s/x8f</text>
+    <text x="836" y="174" fill="#eab308" font-size="9" font-family="'SF Mono','Fira Code','Consolas',monospace">#key</text>
+
+    <text x="684" y="204" fill="#94a3b8" font-size="9.5">Key embedded in URL fragment —</text>
+    <text x="684" y="218" fill="#eab308" font-size="9.5" font-weight="500">never sent to the server.</text>
+  </g>
+
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- TRANSITION ARROW: Top row → Bottom row          -->
+  <!-- ═══════════════════════════════════════════════ -->
+
+  <!-- Curved connector from step 3 down to step 4 -->
+  <path d="M 795 234 L 795 265 C 795 280, 795 280, 770 290 L 640 290 C 620 290, 620 290, 620 305" fill="none" stroke="#eab308" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#aY)" opacity="0.5"/>
+
+  <!-- "Share via" label on curve -->
+  <rect x="660" y="260" width="120" height="20" rx="4" fill="#0b1022" stroke="#eab308" stroke-width="0.6" opacity="0.85"/>
+  <text x="720" y="274" text-anchor="middle" fill="#eab308" font-size="9" font-weight="500">Share via Email / Slack / SMS</text>
+
+  <!-- Subtle "RECIPIENT" lane label -->
+  <text x="38" y="330" fill="#06b6d4" font-size="9" font-weight="600" letter-spacing="2" opacity="0.5">RECIPIENT</text>
+
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  RECIPIENT SIDE (Steps 4–6) - Bottom Row        -->
+  <!-- ═══════════════════════════════════════════════ -->
+
+  <!-- ──── STEP 4: Open Link ──── -->
+  <g>
+    <rect x="474" y="342" width="250" height="120" rx="12" fill="#081a1e" stroke="#06b6d4" stroke-width="1.2" filter="url(#shadow)"/>
+    <circle cx="498" cy="366" r="12" fill="#081a1e" stroke="#06b6d4" stroke-width="1.5" filter="url(#gC)"/>
+    <text x="498" y="370" text-anchor="middle" fill="#06b6d4" font-size="11" font-weight="800">4</text>
+    <text x="518" y="371" fill="#06b6d4" font-size="13" font-weight="700">Open the Link</text>
+
+    <!-- Browser bar mini -->
+    <rect x="494" y="390" width="210" height="24" rx="5" fill="#0a1820" stroke="#06b6d4" stroke-width="0.7" opacity="0.8"/>
+    <circle cx="507" cy="402" r="3" fill="#ef4444" opacity="0.5"/>
+    <circle cx="517" cy="402" r="3" fill="#eab308" opacity="0.5"/>
+    <circle cx="527" cy="402" r="3" fill="#22c55e" opacity="0.5"/>
+    <text x="540" y="406" fill="#67e8f9" font-size="8" font-family="'SF Mono','Fira Code','Consolas',monospace">trustdrop.co/s/x8f#key</text>
+
+    <text x="494" y="436" fill="#94a3b8" font-size="9.5">Browser fetches ciphertext from server.</text>
+    <text x="494" y="450" fill="#06b6d4" font-size="9.5" font-weight="500">Key stays in browser — server never sees it.</text>
+  </g>
+
+  <!-- Arrow 4→5 -->
+  <line x1="470" y1="402" x2="416" y2="402" stroke="#06b6d4" stroke-width="1.8" marker-end="url(#aC)" opacity="0.6"/>
+
+  <!-- ──── STEP 5: Decrypted ──── -->
+  <g>
+    <rect x="158" y="342" width="250" height="120" rx="12" fill="#0b1a12" stroke="#22c55e" stroke-width="1.2" filter="url(#shadow)"/>
+    <circle cx="182" cy="366" r="12" fill="#0b1a12" stroke="#22c55e" stroke-width="1.5" filter="url(#gG)"/>
+    <text x="182" y="370" text-anchor="middle" fill="#22c55e" font-size="11" font-weight="800">5</text>
+    <text x="202" y="371" fill="#22c55e" font-size="13" font-weight="700">Secret Revealed</text>
+
+    <!-- Revealed content -->
+    <rect x="178" y="390" width="210" height="28" rx="5" fill="#0f2618" stroke="#22c55e" stroke-width="0.7" opacity="0.8"/>
+    <text x="190" y="408" fill="#4ade80" font-size="10" font-family="'SF Mono','Fira Code','Consolas',monospace">db_password = s3cr3t!</text>
+
+    <text x="178" y="438" fill="#94a3b8" font-size="9.5">Decrypted entirely in the browser.</text>
+    <text x="178" y="452" fill="#22c55e" font-size="9.5" font-weight="500">✓ Plaintext never touches the server.</text>
+  </g>
+
+  <!-- Arrow 5→6 -->
+  <line x1="154" y1="402" x2="98" y2="402" stroke="#a855f7" stroke-width="1.8" marker-end="url(#aP)" opacity="0.6"/>
+
+  <!-- ──── STEP 6: Deleted ──── -->
+  <g>
+    <rect x="32" y="356" width="60" height="92" rx="10" fill="#1c0a0e" stroke="#ef4444" stroke-width="1.5" filter="url(#shadow)"/>
+
+    <!-- Trash icon -->
+    <rect x="50" y="380" width="24" height="22" rx="3" fill="none" stroke="#ef4444" stroke-width="1.3"/>
+    <line x1="46" y1="380" x2="78" y2="380" stroke="#ef4444" stroke-width="1.3"/>
+    <rect x="56" y="375" width="12" height="5" rx="2" fill="none" stroke="#ef4444" stroke-width="1"/>
+    <line x1="56" y1="386" x2="56" y2="398" stroke="#ef4444" stroke-width="0.8" opacity="0.6"/>
+    <line x1="62" y1="386" x2="62" y2="398" stroke="#ef4444" stroke-width="0.8" opacity="0.6"/>
+    <line x1="68" y1="386" x2="68" y2="398" stroke="#ef4444" stroke-width="0.8" opacity="0.6"/>
+
+    <text x="62" y="424" text-anchor="middle" fill="#ef4444" font-size="8" font-weight="700" letter-spacing="0.5">GONE</text>
+    <text x="62" y="440" text-anchor="middle" fill="#ef4444" font-size="7" font-weight="500">FOREVER</text>
+  </g>
+
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- BOTTOM: KEY PRINCIPLES                          -->
+  <!-- ═══════════════════════════════════════════════ -->
+
+  <line x1="32" y1="488" x2="928" y2="488" stroke="#1e293b" stroke-width="0.8"/>
+
+  <text x="480" y="510" text-anchor="middle" fill="#64748b" font-size="9" font-weight="600" letter-spacing="3">KEY SECURITY PRINCIPLES</text>
+
+  <!-- Principle cards -->
+
+  <!-- Card 1: Zero Knowledge -->
+  <rect x="32" y="524" width="210" height="72" rx="8" fill="#0b1022" stroke="#1e293b" stroke-width="0.7"/>
+  <circle cx="52" cy="546" r="4" fill="#3b82f6" filter="url(#gB)"/>
+  <text x="64" y="550" fill="#60a5fa" font-size="10.5" font-weight="700">Zero-Knowledge Server</text>
+  <text x="44" y="568" fill="#94a3b8" font-size="9.5">The server stores only encrypted</text>
+  <text x="44" y="582" fill="#94a3b8" font-size="9.5">blobs — it can never read your secrets.</text>
+
+  <!-- Card 2: E2E Encrypted -->
+  <rect x="260" y="524" width="210" height="72" rx="8" fill="#0b1022" stroke="#1e293b" stroke-width="0.7"/>
+  <circle cx="280" cy="546" r="4" fill="#22c55e" filter="url(#gG)"/>
+  <text x="292" y="550" fill="#4ade80" font-size="10.5" font-weight="700">End-to-End Encrypted</text>
+  <text x="272" y="568" fill="#94a3b8" font-size="9.5">Encryption &amp; decryption happen</text>
+  <text x="272" y="582" fill="#94a3b8" font-size="9.5">exclusively in the browser (AES-256).</text>
+
+  <!-- Card 3: Auto-Destruct -->
+  <rect x="488" y="524" width="210" height="72" rx="8" fill="#0b1022" stroke="#1e293b" stroke-width="0.7"/>
+  <circle cx="508" cy="546" r="4" fill="#ef4444" filter="url(#gR)"/>
+  <text x="520" y="550" fill="#f87171" font-size="10.5" font-weight="700">Auto-Destruct</text>
+  <text x="500" y="568" fill="#94a3b8" font-size="9.5">Secrets self-delete after being viewed,</text>
+  <text x="500" y="582" fill="#94a3b8" font-size="9.5">after expiry, or on wrong password.</text>
+
+  <!-- Card 4: No Recovery -->
+  <rect x="716" y="524" width="210" height="72" rx="8" fill="#0b1022" stroke="#1e293b" stroke-width="0.7"/>
+  <circle cx="736" cy="546" r="4" fill="#eab308" filter="url(#gY)"/>
+  <text x="748" y="550" fill="#eab308" font-size="10.5" font-weight="700">No Recovery by Design</text>
+  <text x="728" y="568" fill="#94a3b8" font-size="9.5">Once deleted, data is gone forever.</text>
+  <text x="728" y="582" fill="#94a3b8" font-size="9.5">No backups. No recycle bin. No logs.</text>
+</svg>

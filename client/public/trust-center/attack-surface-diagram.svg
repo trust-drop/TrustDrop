@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" font-family="'Inter', 'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1526"/>
+      <stop offset="50%" style="stop-color:#111c32"/>
+      <stop offset="100%" style="stop-color:#0d1526"/>
+    </linearGradient>
+    <linearGradient id="trustedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:0.02"/>
+    </linearGradient>
+    <linearGradient id="untrustedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:0.06"/>
+      <stop offset="100%" style="stop-color:#ef4444;stop-opacity:0.01"/>
+    </linearGradient>
+    <linearGradient id="tealAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#309ab0"/>
+      <stop offset="100%" style="stop-color:#2d8fa3"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1b2740" stroke-width="0.4" opacity="0.3"/>
+    </pattern>
+    <filter id="glowEmerald" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/><feFlood flood-color="#34d399" flood-opacity="0.35"/>
+      <feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowRed" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/><feFlood flood-color="#ef4444" flood-opacity="0.35"/>
+      <feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowTeal" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/><feFlood flood-color="#309ab0" flood-opacity="0.35"/>
+      <feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowAmber" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/><feFlood flood-color="#fbbf24" flood-opacity="0.3"/>
+      <feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrowTeal" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#309ab0"/></marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ef4444"/></marker>
+    <marker id="arrowAmber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#fbbf24"/></marker>
+  </defs>
+
+  <rect width="1200" height="820" fill="url(#bgGrad)"/>
+  <rect width="1200" height="820" fill="url(#grid)"/>
+
+  <!-- Title -->
+  <text x="600" y="48" text-anchor="middle" fill="#e6eaf0" font-size="26" font-weight="700" letter-spacing="2">TRUSTDROP — ATTACK SURFACE DIAGRAM</text>
+  <line x1="380" y1="60" x2="820" y2="60" stroke="url(#tealAccent)" stroke-width="1.5" opacity="0.5"/>
+  <text x="600" y="78" text-anchor="middle" fill="#7d8a9a" font-size="12" letter-spacing="3" font-weight="400">ZERO-KNOWLEDGE SECRET SHARING · END-TO-END ENCRYPTED DATA FLOW</text>
+
+  <!-- TRUST BOUNDARY ZONES -->
+  <rect x="30" y="100" width="280" height="610" rx="12" fill="url(#trustedGrad)" stroke="#34d399" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.85"/>
+  <rect x="30" y="100" width="280" height="32" rx="12" fill="#34d399" opacity="0.08"/>
+  <circle cx="52" cy="116" r="5" fill="#34d399" filter="url(#glowEmerald)"/>
+  <text x="66" y="121" fill="#34d399" font-size="11" font-weight="600" letter-spacing="1.5">TRUST BOUNDARY 1 — TRUSTED</text>
+
+  <rect x="340" y="100" width="520" height="610" rx="12" fill="url(#untrustedGrad)" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.85"/>
+  <rect x="340" y="100" width="520" height="32" rx="12" fill="#ef4444" opacity="0.06"/>
+  <circle cx="362" cy="116" r="5" fill="#ef4444" filter="url(#glowRed)"/>
+  <text x="376" y="121" fill="#ef4444" font-size="11" font-weight="600" letter-spacing="1.5">TRUST BOUNDARY 2 — UNTRUSTED / ASSUMED COMPROMISED</text>
+
+  <rect x="890" y="100" width="280" height="610" rx="12" fill="url(#trustedGrad)" stroke="#34d399" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.85"/>
+  <rect x="890" y="100" width="280" height="32" rx="12" fill="#34d399" opacity="0.08"/>
+  <circle cx="912" cy="116" r="5" fill="#34d399" filter="url(#glowEmerald)"/>
+  <text x="926" y="121" fill="#34d399" font-size="11" font-weight="600" letter-spacing="1.5">TRUST BOUNDARY 3 — TRUSTED</text>
+
+  <!-- ENTITY BOXES -->
+  <!-- Sender -->
+  <rect x="70" y="160" width="200" height="80" rx="10" fill="#131d30" stroke="#34d399" stroke-width="1.5" filter="url(#softShadow)"/>
+  <rect x="70" y="160" width="200" height="28" rx="10" fill="#34d399" opacity="0.06"/>
+  <circle cx="96" cy="174" r="7" fill="none" stroke="#34d399" stroke-width="1.2"/>
+  <line x1="89" y1="174" x2="103" y2="174" stroke="#34d399" stroke-width="0.8"/>
+  <line x1="96" y1="167" x2="96" y2="181" stroke="#34d399" stroke-width="0.8"/>
+  <ellipse cx="96" cy="174" rx="3.5" ry="7" fill="none" stroke="#34d399" stroke-width="0.8"/>
+  <text x="112" y="178" fill="#34d399" font-size="11" font-weight="600" letter-spacing="1">SENDER</text>
+  <text x="170" y="210" text-anchor="middle" fill="#e6eaf0" font-size="14" font-weight="600">Sender Browser</text>
+  <text x="170" y="228" text-anchor="middle" fill="#7d8a9a" font-size="10">Client-side encryption</text>
+
+  <!-- Server -->
+  <rect x="480" y="160" width="240" height="80" rx="10" fill="#131d30" stroke="#ef4444" stroke-width="1.5" filter="url(#softShadow)"/>
+  <rect x="480" y="160" width="240" height="28" rx="10" fill="#ef4444" opacity="0.05"/>
+  <rect x="502" y="169" width="14" height="4" rx="1" fill="none" stroke="#ef4444" stroke-width="1"/>
+  <rect x="502" y="174" width="14" height="4" rx="1" fill="none" stroke="#ef4444" stroke-width="1"/>
+  <rect x="502" y="179" width="14" height="4" rx="1" fill="none" stroke="#ef4444" stroke-width="1"/>
+  <circle cx="513" cy="171" r="1" fill="#ef4444"/><circle cx="513" cy="176" r="1" fill="#ef4444"/><circle cx="513" cy="181" r="1" fill="#ef4444"/>
+  <text x="522" y="178" fill="#ef4444" font-size="11" font-weight="600" letter-spacing="1">SERVER</text>
+  <text x="600" y="210" text-anchor="middle" fill="#e6eaf0" font-size="14" font-weight="600">TrustDrop Server</text>
+  <text x="600" y="228" text-anchor="middle" fill="#7d8a9a" font-size="10">Stores ciphertext only · Never sees keys</text>
+
+  <!-- Recipient -->
+  <rect x="930" y="160" width="200" height="80" rx="10" fill="#131d30" stroke="#34d399" stroke-width="1.5" filter="url(#softShadow)"/>
+  <rect x="930" y="160" width="200" height="28" rx="10" fill="#34d399" opacity="0.06"/>
+  <circle cx="956" cy="174" r="7" fill="none" stroke="#34d399" stroke-width="1.2"/>
+  <line x1="949" y1="174" x2="963" y2="174" stroke="#34d399" stroke-width="0.8"/>
+  <line x1="956" y1="167" x2="956" y2="181" stroke="#34d399" stroke-width="0.8"/>
+  <ellipse cx="956" cy="174" rx="3.5" ry="7" fill="none" stroke="#34d399" stroke-width="0.8"/>
+  <text x="972" y="178" fill="#34d399" font-size="11" font-weight="600" letter-spacing="1">RECIPIENT</text>
+  <text x="1030" y="210" text-anchor="middle" fill="#e6eaf0" font-size="14" font-weight="600">Recipient Browser</text>
+  <text x="1030" y="228" text-anchor="middle" fill="#7d8a9a" font-size="10">Client-side decryption</text>
+
+  <!-- STEP 1 -->
+  <circle cx="60" cy="295" r="14" fill="#131d30" stroke="#309ab0" stroke-width="1.5" filter="url(#glowTeal)"/>
+  <text x="60" y="300" text-anchor="middle" fill="#309ab0" font-size="12" font-weight="700">1</text>
+  <rect x="82" y="278" width="210" height="46" rx="6" fill="#131d30" stroke="#1b2740" stroke-width="0.8"/>
+  <text x="92" y="296" fill="#e6eaf0" font-size="11" font-weight="600">Plaintext encrypted locally</text>
+  <rect x="92" y="302" width="72" height="16" rx="3" fill="#34d399" opacity="0.12"/>
+  <text x="128" y="314" text-anchor="middle" fill="#34d399" font-size="9" font-weight="600">AES-256-GCM</text>
+  <line x1="295" y1="300" x2="477" y2="300" stroke="#309ab0" stroke-width="2" marker-end="url(#arrowTeal)" opacity="0.85"/>
+  <rect x="330" y="286" width="100" height="18" rx="3" fill="#0d1526" stroke="#309ab0" stroke-width="0.6" opacity="0.8"/>
+  <text x="380" y="299" text-anchor="middle" fill="#309ab0" font-size="9" font-weight="500">Ciphertext only</text>
+
+  <!-- STEP 2 -->
+  <circle cx="470" cy="295" r="14" fill="#131d30" stroke="#ef4444" stroke-width="1.5" filter="url(#glowRed)"/>
+  <text x="470" y="300" text-anchor="middle" fill="#ef4444" font-size="12" font-weight="700">2</text>
+  <rect x="492" y="278" width="220" height="46" rx="6" fill="#1a0f16" stroke="#3d1525" stroke-width="0.8"/>
+  <text x="502" y="296" fill="#e6eaf0" font-size="11" font-weight="600">Ciphertext stored on server</text>
+  <rect x="502" y="302" width="84" height="16" rx="3" fill="#ef4444" opacity="0.1"/>
+  <text x="544" y="314" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="600">🔒 NO KEY STORED</text>
+
+  <!-- STEP 3 -->
+  <circle cx="60" cy="390" r="14" fill="#131d30" stroke="#fbbf24" stroke-width="1.5" filter="url(#glowAmber)"/>
+  <text x="60" y="395" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">3</text>
+  <rect x="82" y="370" width="210" height="54" rx="6" fill="#1a1708" stroke="#3d3508" stroke-width="0.8"/>
+  <text x="92" y="390" fill="#e6eaf0" font-size="11" font-weight="600">Link shared out-of-band</text>
+  <text x="92" y="406" fill="#7d8a9a" font-size="9.5">via Email, Slack, SMS, etc.</text>
+  <text x="92" y="418" fill="#fbbf24" font-size="9" font-weight="500">Key in URL #fragment only</text>
+  <path d="M 295 390 C 500 340, 700 340, 927 390" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrowAmber)" opacity="0.8"/>
+  <rect x="530" y="344" width="140" height="20" rx="4" fill="#0d1526" stroke="#fbbf24" stroke-width="0.6" opacity="0.85"/>
+  <text x="600" y="358" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="600">⚠ BYPASSES SERVER</text>
+  <rect x="930" y="370" width="200" height="42" rx="6" fill="#1a1708" stroke="#3d3508" stroke-width="0.8"/>
+  <text x="940" y="389" fill="#e6eaf0" font-size="11" font-weight="600">Receives link + key</text>
+  <text x="940" y="404" fill="#7d8a9a" font-size="9.5">Key never touches the server</text>
+
+  <!-- STEP 4 -->
+  <circle cx="1160" cy="478" r="14" fill="#131d30" stroke="#309ab0" stroke-width="1.5" filter="url(#glowTeal)"/>
+  <text x="1160" y="483" text-anchor="middle" fill="#309ab0" font-size="12" font-weight="700">4</text>
+  <rect x="930" y="458" width="200" height="46" rx="6" fill="#131d30" stroke="#1b2740" stroke-width="0.8"/>
+  <text x="940" y="476" fill="#e6eaf0" font-size="11" font-weight="600">Fetches ciphertext</text>
+  <text x="940" y="494" fill="#7d8a9a" font-size="9.5">Key NOT sent to server</text>
+  <line x1="927" y1="480" x2="723" y2="480" stroke="#309ab0" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrowTeal)" opacity="0.75"/>
+  <rect x="770" y="467" width="110" height="18" rx="3" fill="#0d1526" stroke="#309ab0" stroke-width="0.6" opacity="0.8"/>
+  <text x="825" y="480" text-anchor="middle" fill="#309ab0" font-size="9" font-weight="500">Request ciphertext</text>
+  <rect x="492" y="458" width="220" height="46" rx="6" fill="#1a0f16" stroke="#3d1525" stroke-width="0.8"/>
+  <text x="502" y="476" fill="#e6eaf0" font-size="11" font-weight="600">Serves encrypted blob</text>
+  <text x="502" y="494" fill="#7d8a9a" font-size="9.5">Still has no access to key</text>
+
+  <!-- STEP 5 -->
+  <circle cx="1160" cy="560" r="14" fill="#131d30" stroke="#34d399" stroke-width="1.5" filter="url(#glowEmerald)"/>
+  <text x="1160" y="565" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">5</text>
+  <rect x="930" y="540" width="200" height="46" rx="6" fill="#131d30" stroke="#1b2740" stroke-width="0.8"/>
+  <text x="940" y="558" fill="#34d399" font-size="11" font-weight="700">✓ Decrypted in browser</text>
+  <text x="940" y="574" fill="#7d8a9a" font-size="9.5">Plaintext never leaves client</text>
+
+  <!-- STEP 6 -->
+  <circle cx="470" cy="560" r="14" fill="#131d30" stroke="#ef4444" stroke-width="1.5" filter="url(#glowRed)"/>
+  <text x="470" y="565" text-anchor="middle" fill="#ef4444" font-size="12" font-weight="700">6</text>
+  <rect x="492" y="540" width="220" height="46" rx="6" fill="#1a0f16" stroke="#3d1525" stroke-width="0.8"/>
+  <text x="502" y="558" fill="#e6eaf0" font-size="11" font-weight="600">Ciphertext deleted</text>
+  <text x="502" y="574" fill="#ef4444" font-size="9.5" font-weight="500">🗑 Zero residual data on server</text>
+
+  <!-- KEY INSIGHT -->
+  <rect x="60" y="630" width="480" height="60" rx="8" fill="#131d30" stroke="#309ab0" stroke-width="1" opacity="0.9"/>
+  <text x="80" y="654" fill="#309ab0" font-size="11" font-weight="700" letter-spacing="1">🔑 KEY INSIGHT</text>
+  <text x="80" y="672" fill="#b8c0cc" font-size="10.5">The decryption key exists only in the URL fragment (#), which is never sent to the</text>
+  <text x="80" y="685" fill="#b8c0cc" font-size="10.5">server by browsers per RFC 3986. The server is cryptographically blind.</text>
+
+  <!-- LEGEND -->
+  <rect x="580" y="630" width="580" height="60" rx="8" fill="#131d30" stroke="#1b2740" stroke-width="1" opacity="0.9"/>
+  <rect x="600" y="647" width="12" height="12" rx="2" fill="#34d399" opacity="0.2" stroke="#34d399" stroke-width="1"/>
+  <text x="620" y="658" fill="#7d8a9a" font-size="10">Trusted zone (client-side)</text>
+  <rect x="780" y="647" width="12" height="12" rx="2" fill="#ef4444" opacity="0.15" stroke="#ef4444" stroke-width="1"/>
+  <text x="800" y="658" fill="#7d8a9a" font-size="10">Untrusted zone (server)</text>
+  <line x1="950" y1="653" x2="980" y2="653" stroke="#309ab0" stroke-width="2"/>
+  <text x="990" y="658" fill="#7d8a9a" font-size="10">Data flow</text>
+  <line x1="600" y1="676" x2="630" y2="676" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="640" y="680" fill="#7d8a9a" font-size="10">Out-of-band channel</text>
+  <rect x="780" y="670" width="50" height="14" rx="3" fill="#34d399" opacity="0.12"/>
+  <text x="805" y="680" text-anchor="middle" fill="#34d399" font-size="8" font-weight="600">AES-256</text>
+  <text x="840" y="680" fill="#7d8a9a" font-size="10">Encryption standard</text>
+  <circle cx="956" cy="676" r="8" fill="#131d30" stroke="#7d8a9a" stroke-width="1"/>
+  <text x="956" y="680" text-anchor="middle" fill="#7d8a9a" font-size="8" font-weight="700">N</text>
+  <text x="974" y="680" fill="#7d8a9a" font-size="10">Flow step</text>
+</svg>

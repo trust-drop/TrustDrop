@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" font-family="'Inter', 'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1526"/><stop offset="50%" style="stop-color:#111c32"/><stop offset="100%" style="stop-color:#0d1526"/>
+    </linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#1b2740" stroke-width="0.35" opacity="0.25"/>
+    </pattern>
+    <filter id="gT" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#309ab0" flood-opacity="0.35"/>
+      <feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="gG" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#34d399" flood-opacity="0.35"/>
+      <feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="gY" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2" result="b"/><feFlood flood-color="#fbbf24" flood-opacity="0.3"/>
+      <feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <rect width="720" height="520" fill="url(#bg)"/>
+  <rect width="720" height="520" fill="url(#grid)"/>
+
+  <!-- Title -->
+  <rect x="0" y="0" width="720" height="50" fill="#0d1526" opacity="0.85"/>
+  <text x="360" y="24" text-anchor="middle" fill="#e6eaf0" font-size="16" font-weight="700" letter-spacing="2.5">TRUSTDROP · URL ANATOMY</text>
+  <text x="360" y="42" text-anchor="middle" fill="#7d8a9a" font-size="9.5" letter-spacing="2">WHAT THE SERVER SEES vs. WHAT STAYS IN YOUR BROWSER</text>
+
+  <!-- Browser bar -->
+  <rect x="28" y="68" width="664" height="56" rx="10" fill="#131d30" stroke="#1b2740" stroke-width="1.5" filter="url(#shadow)"/>
+  <circle cx="50" cy="82" r="4.5" fill="#ef4444" opacity="0.7"/>
+  <circle cx="66" cy="82" r="4.5" fill="#fbbf24" opacity="0.7"/>
+  <circle cx="82" cy="82" r="4.5" fill="#34d399" opacity="0.7"/>
+  <rect x="104" y="88" width="12" height="9" rx="2" fill="none" stroke="#34d399" stroke-width="1.2"/>
+  <path d="M107 88 L107 84 A3 3 0 0 1 113 84 L113 88" fill="none" stroke="#34d399" stroke-width="1.2"/>
+  <text x="122" y="98" fill="#7d8a9a" font-size="9">HTTPS</text>
+
+  <!-- URL segments -->
+  <rect x="148" y="86" width="302" height="24" rx="4" fill="#309ab0" opacity="0.04"/>
+  <rect x="450" y="86" width="228" height="24" rx="4" fill="#34d399" opacity="0.04"/>
+  <text y="103">
+    <tspan x="152" fill="#309ab0" font-size="12.5" font-weight="600" font-family="'JetBrains Mono', 'Fira Code', monospace">https://trustdrop.com/s/a8f3x</tspan><tspan fill="#fbbf24" font-size="14" font-weight="800" font-family="'JetBrains Mono', 'Fira Code', monospace">#</tspan><tspan fill="#34d399" font-size="12.5" font-weight="600" font-family="'JetBrains Mono', 'Fira Code', monospace">k=7Bq9...</tspan><tspan fill="#34d399" font-size="12.5" font-weight="600" font-family="'JetBrains Mono', 'Fira Code', monospace">&amp;iv=xP2m...</tspan>
+  </text>
+
+  <!-- Brackets -->
+  <line x1="152" y1="130" x2="152" y2="140" stroke="#309ab0" stroke-width="1.2"/>
+  <line x1="152" y1="140" x2="300" y2="140" stroke="#309ab0" stroke-width="1.2"/>
+  <line x1="448" y1="140" x2="300" y2="140" stroke="#309ab0" stroke-width="1.2"/>
+  <line x1="448" y1="130" x2="448" y2="140" stroke="#309ab0" stroke-width="1.2"/>
+  <line x1="300" y1="140" x2="300" y2="150" stroke="#309ab0" stroke-width="1.2"/>
+  <circle cx="300" cy="155" r="3" fill="#309ab0" filter="url(#gT)"/>
+
+  <line x1="454" y1="130" x2="454" y2="140" stroke="#34d399" stroke-width="1.2"/>
+  <line x1="454" y1="140" x2="548" y2="140" stroke="#34d399" stroke-width="1.2"/>
+  <line x1="640" y1="140" x2="548" y2="140" stroke="#34d399" stroke-width="1.2"/>
+  <line x1="640" y1="130" x2="640" y2="140" stroke="#34d399" stroke-width="1.2"/>
+  <line x1="548" y1="140" x2="548" y2="150" stroke="#34d399" stroke-width="1.2"/>
+  <circle cx="548" cy="155" r="3" fill="#34d399" filter="url(#gG)"/>
+
+  <!-- Hash separator callout -->
+  <line x1="452" y1="112" x2="452" y2="128" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/>
+  <rect x="424" y="128" width="56" height="18" rx="4" fill="#1a1708" stroke="#fbbf24" stroke-width="0.8"/>
+  <text x="452" y="140" text-anchor="middle" fill="#fbbf24" font-size="8" font-weight="700" letter-spacing="0.5">SEPARATOR</text>
+
+  <!-- LEFT CARD: Sent to server -->
+  <rect x="36" y="170" width="310" height="208" rx="10" fill="#131d30" stroke="#309ab0" stroke-width="1.2" filter="url(#shadow)"/>
+  <rect x="36" y="170" width="310" height="34" rx="10" fill="#309ab0" opacity="0.05"/>
+  <rect x="36" y="195" width="310" height="9" rx="0" fill="#309ab0" opacity="0.05"/>
+  <circle cx="58" cy="187" r="5" fill="#309ab0" filter="url(#gT)"/>
+  <text x="72" y="192" fill="#309ab0" font-size="11" font-weight="700" letter-spacing="1.5">SENT TO SERVER</text>
+  <rect x="260" y="179" width="74" height="16" rx="3" fill="#309ab0" opacity="0.08"/>
+  <text x="297" y="191" text-anchor="middle" fill="#309ab0" font-size="8" font-weight="600">IN HTTP REQUEST</text>
+
+  <text x="56" y="228" fill="#7d8a9a" font-size="9.5" font-weight="600" letter-spacing="0.5">PROTOCOL</text>
+  <text x="156" y="228" fill="#309ab0" font-size="11" font-weight="500" font-family="'JetBrains Mono', monospace">https://</text>
+  <line x1="56" y1="238" x2="326" y2="238" stroke="#1b2740" stroke-width="0.5"/>
+  <text x="56" y="258" fill="#7d8a9a" font-size="9.5" font-weight="600" letter-spacing="0.5">HOSTNAME</text>
+  <text x="156" y="258" fill="#309ab0" font-size="11" font-weight="500" font-family="'JetBrains Mono', monospace">trustdrop.com</text>
+  <line x1="56" y1="268" x2="326" y2="268" stroke="#1b2740" stroke-width="0.5"/>
+  <text x="56" y="288" fill="#7d8a9a" font-size="9.5" font-weight="600" letter-spacing="0.5">PATH</text>
+  <text x="156" y="288" fill="#309ab0" font-size="11" font-weight="500" font-family="'JetBrains Mono', monospace">/s/a8f3x</text>
+  <line x1="56" y1="298" x2="326" y2="298" stroke="#1b2740" stroke-width="0.5"/>
+  <text x="56" y="318" fill="#7d8a9a" font-size="9.5" font-weight="600" letter-spacing="0.5">QUERY STRING</text>
+  <text x="156" y="318" fill="#475569" font-size="11" font-weight="500" font-family="'JetBrains Mono', monospace">(none)</text>
+
+  <rect x="46" y="336" width="290" height="34" rx="5" fill="#309ab0" opacity="0.04" stroke="#309ab0" stroke-width="0.5"/>
+  <text x="56" y="350" fill="#7d8a9a" font-size="9">Server learns: </text>
+  <text x="130" y="350" fill="#309ab0" font-size="9" font-weight="600">which secret ID was requested</text>
+  <text x="56" y="364" fill="#7d8a9a" font-size="9">Sufficient to: </text>
+  <text x="120" y="364" fill="#309ab0" font-size="9" font-weight="600">retrieve the ciphertext blob</text>
+
+  <!-- RIGHT CARD: Never leaves browser -->
+  <rect x="374" y="170" width="310" height="208" rx="10" fill="#0f1a22" stroke="#34d399" stroke-width="1.2" filter="url(#shadow)"/>
+  <rect x="374" y="170" width="310" height="34" rx="10" fill="#34d399" opacity="0.04"/>
+  <rect x="374" y="195" width="310" height="9" rx="0" fill="#34d399" opacity="0.04"/>
+  <circle cx="396" cy="187" r="5" fill="#34d399" filter="url(#gG)"/>
+  <text x="410" y="192" fill="#34d399" font-size="11" font-weight="700" letter-spacing="1.5">NEVER LEAVES BROWSER</text>
+  <rect x="592" y="179" width="80" height="16" rx="3" fill="#34d399" opacity="0.06"/>
+  <text x="632" y="191" text-anchor="middle" fill="#34d399" font-size="8" font-weight="600">CLIENT-SIDE ONLY</text>
+
+  <text x="394" y="228" fill="#7d8a9a" font-size="9.5" font-weight="600" letter-spacing="0.5">FRAGMENT ID</text>
+  <text x="494" y="228" fill="#34d399" font-size="11" font-weight="500" font-family="'JetBrains Mono', monospace">#</text>
+  <line x1="394" y1="238" x2="664" y2="238" stroke="#1a3029" stroke-width="0.5"/>
+  <text x="394" y="258" fill="#7d8a9a" font-size="9.5" font-weight="600" letter-spacing="0.5">AES KEY</text>
+  <text x="494" y="258" fill="#34d399" font-size="11" font-weight="500" font-family="'JetBrains Mono', monospace">k=7Bq9...mP4w</text>
+  <line x1="394" y1="268" x2="664" y2="268" stroke="#1a3029" stroke-width="0.5"/>
+  <text x="394" y="288" fill="#7d8a9a" font-size="9.5" font-weight="600" letter-spacing="0.5">IV / NONCE</text>
+  <text x="494" y="288" fill="#34d399" font-size="11" font-weight="500" font-family="'JetBrains Mono', monospace">iv=xP2m...rY8q</text>
+  <line x1="394" y1="298" x2="664" y2="298" stroke="#1a3029" stroke-width="0.5"/>
+  <text x="394" y="318" fill="#7d8a9a" font-size="9.5" font-weight="600" letter-spacing="0.5">USED FOR</text>
+  <text x="494" y="318" fill="#34d399" font-size="11" font-weight="600">AES-256-GCM decryption</text>
+
+  <rect x="384" y="336" width="290" height="34" rx="5" fill="#34d399" opacity="0.03" stroke="#34d399" stroke-width="0.5"/>
+  <text x="394" y="350" fill="#7d8a9a" font-size="9">Server sees: </text>
+  <text x="456" y="350" fill="#ef4444" font-size="9" font-weight="700">NOTHING — fragment stripped by browser</text>
+  <text x="394" y="364" fill="#7d8a9a" font-size="9">Per: </text>
+  <text x="418" y="364" fill="#34d399" font-size="9" font-weight="500">RFC 3986 §3.5 — fragment is client-only</text>
+
+  <!-- RFC Callout -->
+  <rect x="36" y="396" width="648" height="72" rx="8" fill="#131d30" stroke="#fbbf24" stroke-width="0.8" filter="url(#shadow)"/>
+  <rect x="36" y="396" width="648" height="26" rx="8" fill="#fbbf24" opacity="0.03"/>
+  <rect x="36" y="414" width="648" height="8" rx="0" fill="#fbbf24" opacity="0.03"/>
+  <rect x="52" y="404" width="14" height="11" rx="1.5" fill="none" stroke="#fbbf24" stroke-width="1.2"/>
+  <line x1="52" y1="409" x2="66" y2="409" stroke="#fbbf24" stroke-width="0.8"/>
+  <text x="75" y="415" fill="#fbbf24" font-size="10.5" font-weight="700" letter-spacing="1">WHY THIS WORKS — RFC 3986 §3.5</text>
+  <text x="52" y="440" fill="#b8c0cc" font-size="10.5">The fragment component (everything after <tspan fill="#fbbf24" font-weight="700">#</tspan>) is processed exclusively by the user agent (browser).</text>
+  <text x="52" y="456" fill="#b8c0cc" font-size="10.5">It is <tspan fill="#ef4444" font-weight="700">never included</tspan> in the HTTP request sent to the server — making it the perfect transport for the decryption key.</text>
+
+  <!-- Legend -->
+  <rect x="36" y="482" width="648" height="28" rx="5" fill="#131d30" stroke="#1b2740" stroke-width="0.6"/>
+  <rect x="52" y="490" width="10" height="10" rx="2" fill="#309ab0" opacity="0.2" stroke="#309ab0" stroke-width="0.8"/>
+  <text x="68" y="500" fill="#7d8a9a" font-size="9.5">Sent to server</text>
+  <rect x="172" y="490" width="10" height="10" rx="2" fill="#34d399" opacity="0.15" stroke="#34d399" stroke-width="0.8"/>
+  <text x="188" y="500" fill="#7d8a9a" font-size="9.5">Client-side only (secret)</text>
+  <rect x="332" y="490" width="10" height="10" rx="2" fill="#fbbf24" opacity="0.15" stroke="#fbbf24" stroke-width="0.8"/>
+  <text x="348" y="500" fill="#7d8a9a" font-size="9.5"># Fragment separator</text>
+  <rect x="500" y="490" width="10" height="10" rx="2" fill="#ef4444" opacity="0.15" stroke="#ef4444" stroke-width="0.8"/>
+  <text x="516" y="500" fill="#7d8a9a" font-size="9.5">Blocked / never transmitted</text>
+</svg>

@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" font-family="'Inter', 'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1526"/><stop offset="100%" style="stop-color:#111c32"/>
+    </linearGradient>
+    <linearGradient id="laneTrusted" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.06"/><stop offset="100%" style="stop-color:#10b981;stop-opacity:0.01"/>
+    </linearGradient>
+    <linearGradient id="laneUntrusted" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:0.05"/><stop offset="100%" style="stop-color:#ef4444;stop-opacity:0.01"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#1b2740" stroke-width="0.35" opacity="0.25"/>
+    </pattern>
+    <filter id="gG" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="b"/><feFlood flood-color="#34d399" flood-opacity="0.4"/>
+      <feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="gB" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="b"/><feFlood flood-color="#309ab0" flood-opacity="0.4"/>
+      <feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="gR" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#ef4444" flood-opacity="0.5"/>
+      <feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="gY" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#fbbf24" flood-opacity="0.35"/>
+      <feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="aG" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#34d399"/></marker>
+    <marker id="aT" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#309ab0"/></marker>
+    <marker id="aY" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#fbbf24"/></marker>
+    <marker id="aW" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#7d8a9a"/></marker>
+  </defs>
+
+  <rect width="960" height="720" fill="url(#bg)"/>
+  <rect width="960" height="720" fill="url(#grid)"/>
+
+  <!-- Title -->
+  <rect x="0" y="0" width="960" height="56" fill="#0d1526" opacity="0.8"/>
+  <text x="480" y="28" text-anchor="middle" fill="#e6eaf0" font-size="18" font-weight="700" letter-spacing="2.5">TRUSTDROP · DATA FLOW DIAGRAM</text>
+  <text x="480" y="46" text-anchor="middle" fill="#7d8a9a" font-size="10" letter-spacing="2">ENCRYPTION &amp; DECRYPTION LIFECYCLE · SWIM LANE VIEW</text>
+
+  <!-- SWIM LANE HEADERS -->
+  <rect x="16" y="68" width="270" height="36" rx="6" fill="#34d399" opacity="0.06" stroke="#34d399" stroke-width="1"/>
+  <circle cx="36" cy="86" r="4" fill="#34d399" filter="url(#gG)"/>
+  <text x="48" y="91" fill="#34d399" font-size="11" font-weight="700" letter-spacing="1.5">SENDER BROWSER</text>
+  <text x="210" y="91" fill="#34d399" font-size="9" opacity="0.6" font-weight="500">TRUSTED</text>
+
+  <rect x="302" y="68" width="356" height="36" rx="6" fill="#ef4444" opacity="0.05" stroke="#ef4444" stroke-width="1"/>
+  <circle cx="322" cy="86" r="4" fill="#ef4444" filter="url(#gR)"/>
+  <text x="334" y="91" fill="#ef4444" font-size="11" font-weight="700" letter-spacing="1.5">TRUSTDROP SERVER</text>
+  <text x="582" y="91" fill="#ef4444" font-size="9" opacity="0.6" font-weight="500">UNTRUSTED</text>
+
+  <rect x="674" y="68" width="270" height="36" rx="6" fill="#34d399" opacity="0.06" stroke="#34d399" stroke-width="1"/>
+  <circle cx="694" cy="86" r="4" fill="#34d399" filter="url(#gG)"/>
+  <text x="706" y="91" fill="#34d399" font-size="11" font-weight="700" letter-spacing="1.5">RECIPIENT BROWSER</text>
+  <text x="882" y="91" fill="#34d399" font-size="9" opacity="0.6" font-weight="500">TRUSTED</text>
+
+  <!-- SWIM LANE BACKGROUNDS -->
+  <rect x="16" y="110" width="270" height="548" rx="4" fill="url(#laneTrusted)" stroke="#34d399" stroke-width="0.6" stroke-dasharray="4,3" opacity="0.7"/>
+  <rect x="302" y="110" width="356" height="548" rx="4" fill="url(#laneUntrusted)" stroke="#ef4444" stroke-width="0.6" stroke-dasharray="4,3" opacity="0.7"/>
+  <rect x="674" y="110" width="270" height="548" rx="4" fill="url(#laneTrusted)" stroke="#34d399" stroke-width="0.6" stroke-dasharray="4,3" opacity="0.7"/>
+  <line x1="293" y1="110" x2="293" y2="658" stroke="#1b2740" stroke-width="1.5" stroke-dasharray="2,6" opacity="0.5"/>
+  <line x1="667" y1="110" x2="667" y2="658" stroke="#1b2740" stroke-width="1.5" stroke-dasharray="2,6" opacity="0.5"/>
+
+  <!-- STEP 1: Plaintext -->
+  <rect x="50" y="126" width="202" height="50" rx="8" fill="#0f1a22" stroke="#34d399" stroke-width="1.5" filter="url(#shadow)"/>
+  <circle cx="72" cy="145" r="8" fill="#34d399" opacity="0.12" stroke="#34d399" stroke-width="1"/>
+  <text x="72" y="149" text-anchor="middle" fill="#34d399" font-size="10" font-weight="700">1</text>
+  <text x="88" y="147" fill="#34d399" font-size="11.5" font-weight="700">Plaintext secret</text>
+  <text x="88" y="164" fill="#7d8a9a" font-size="9.5">User enters sensitive data</text>
+
+  <!-- STEP 2: Encrypt -->
+  <line x1="151" y1="176" x2="151" y2="200" stroke="#34d399" stroke-width="1.5" marker-end="url(#aG)" opacity="0.6"/>
+  <rect x="50" y="206" width="202" height="60" rx="8" fill="#0f1a22" stroke="#34d399" stroke-width="1.5" filter="url(#shadow)"/>
+  <circle cx="72" cy="228" r="8" fill="#34d399" opacity="0.12" stroke="#34d399" stroke-width="1"/>
+  <text x="72" y="232" text-anchor="middle" fill="#34d399" font-size="10" font-weight="700">2</text>
+  <text x="88" y="230" fill="#e6eaf0" font-size="11.5" font-weight="700">Encrypt in browser</text>
+  <rect x="88" y="238" width="78" height="16" rx="3" fill="#34d399" opacity="0.1"/>
+  <text x="127" y="250" text-anchor="middle" fill="#34d399" font-size="9" font-weight="600">AES-256-GCM</text>
+  <text x="170" y="250" fill="#7d8a9a" font-size="9">→ key + ciphertext</text>
+
+  <!-- STEP 3: Send ciphertext -->
+  <line x1="151" y1="266" x2="151" y2="298" stroke="#309ab0" stroke-width="1.5" marker-end="url(#aT)" opacity="0.6"/>
+  <rect x="62" y="304" width="178" height="32" rx="6" fill="#0d1a2a" stroke="#309ab0" stroke-width="1.2"/>
+  <rect x="72" y="311" width="16" height="16" rx="3" fill="#309ab0" opacity="0.15"/>
+  <text x="80" y="323" text-anchor="middle" fill="#309ab0" font-size="10">🔒</text>
+  <text x="96" y="324" fill="#309ab0" font-size="10.5" font-weight="600">Ciphertext blob</text>
+  <line x1="244" y1="320" x2="378" y2="320" stroke="#309ab0" stroke-width="2.5" marker-end="url(#aT)" opacity="0.85"/>
+  <rect x="268" y="300" width="92" height="16" rx="3" fill="#0d1526" stroke="#309ab0" stroke-width="0.6"/>
+  <text x="314" y="312" text-anchor="middle" fill="#309ab0" font-size="8.5" font-weight="500">ciphertext only</text>
+
+  <!-- Red X: no key -->
+  <g filter="url(#gR)" transform="translate(310, 326)">
+    <line x1="-5" y1="-5" x2="5" y2="5" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="5" y1="-5" x2="-5" y2="5" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <text x="326" y="336" fill="#ef4444" font-size="8" font-weight="600">NO KEY</text>
+
+  <!-- Server stores -->
+  <rect x="385" y="296" width="230" height="50" rx="8" fill="#1a0f16" stroke="#ef4444" stroke-width="1" filter="url(#shadow)"/>
+  <circle cx="407" cy="315" r="8" fill="#ef4444" opacity="0.1" stroke="#ef4444" stroke-width="1"/>
+  <text x="407" y="319" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="700">3</text>
+  <text x="423" y="316" fill="#e6eaf0" font-size="11" font-weight="600">Store ciphertext</text>
+  <text x="423" y="333" fill="#ef4444" font-size="9" font-weight="500">⛔ Server has no decryption key</text>
+
+  <!-- Server visibility box -->
+  <rect x="370" y="356" width="260" height="64" rx="6" fill="#131d30" stroke="#1b2740" stroke-width="0.8"/>
+  <text x="385" y="373" fill="#7d8a9a" font-size="9" font-weight="600" letter-spacing="1">SERVER VISIBILITY</text>
+  <circle cx="390" cy="389" r="3.5" fill="#309ab0"/>
+  <text x="400" y="393" fill="#309ab0" font-size="9.5">Encrypted blob, metadata, timestamps</text>
+  <g transform="translate(387, 406)">
+    <line x1="-3" y1="-3" x2="3" y2="3" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="3" y1="-3" x2="-3" y2="3" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+  <text x="400" y="410" fill="#ef4444" font-size="9.5">Plaintext, key, URL fragment, content</text>
+
+  <!-- STEP 4: Out-of-band key -->
+  <line x1="100" y1="266" x2="100" y2="438" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="4,3" opacity="0.5"/>
+  <rect x="36" y="440" width="220" height="56" rx="8" fill="#1a1708" stroke="#fbbf24" stroke-width="1.2" filter="url(#shadow)"/>
+  <circle cx="58" cy="462" r="8" fill="#fbbf24" opacity="0.1" stroke="#fbbf24" stroke-width="1"/>
+  <text x="58" y="466" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="700">4</text>
+  <text x="74" y="462" fill="#fbbf24" font-size="11" font-weight="700">Share link + key</text>
+  <text x="74" y="478" fill="#7d8a9a" font-size="9">Out-of-band: Email, Slack, SMS</text>
+  <text x="74" y="490" fill="#fbbf24" font-size="8.5" font-weight="500">Key lives in URL #fragment</text>
+  <path d="M 256 468 C 380 430, 580 430, 710 468" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="8,5" marker-end="url(#aY)" opacity="0.8"/>
+  <rect x="420" y="432" width="160" height="20" rx="4" fill="#0d1526" stroke="#fbbf24" stroke-width="0.7"/>
+  <text x="500" y="446" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="600">⚠ BYPASSES SERVER ENTIRELY</text>
+
+  <!-- Red X on server -->
+  <g filter="url(#gR)" transform="translate(480, 458)">
+    <circle r="10" fill="#1a0f16" stroke="#ef4444" stroke-width="1.2"/>
+    <line x1="-4" y1="-4" x2="4" y2="4" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="4" y1="-4" x2="-4" y2="4" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <text x="480" y="476" text-anchor="middle" fill="#ef4444" font-size="7.5" font-weight="600">KEY ABSENT</text>
+
+  <!-- Recipient receives link -->
+  <rect x="716" y="448" width="210" height="42" rx="8" fill="#1a1708" stroke="#fbbf24" stroke-width="1" filter="url(#shadow)"/>
+  <text x="731" y="467" fill="#e6eaf0" font-size="10.5" font-weight="600">Receives link with #key</text>
+  <text x="731" y="481" fill="#7d8a9a" font-size="9">Fragment never sent to server</text>
+
+  <!-- STEP 5: Fetch -->
+  <line x1="821" y1="490" x2="821" y2="514" stroke="#7d8a9a" stroke-width="1.2" marker-end="url(#aW)" opacity="0.5"/>
+  <rect x="716" y="520" width="210" height="42" rx="8" fill="#131d30" stroke="#309ab0" stroke-width="1" filter="url(#shadow)"/>
+  <circle cx="738" cy="541" r="8" fill="#309ab0" opacity="0.1" stroke="#309ab0" stroke-width="1"/>
+  <text x="738" y="545" text-anchor="middle" fill="#309ab0" font-size="10" font-weight="700">5</text>
+  <text x="754" y="539" fill="#e6eaf0" font-size="10.5" font-weight="600">Fetch ciphertext</text>
+  <text x="754" y="554" fill="#7d8a9a" font-size="9">GET request (no key sent)</text>
+  <line x1="713" y1="541" x2="622" y2="541" stroke="#309ab0" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#aT)" opacity="0.7"/>
+  <line x1="618" y1="555" x2="713" y2="555" stroke="#309ab0" stroke-width="2" marker-end="url(#aT)" opacity="0.85"/>
+  <text x="664" y="551" text-anchor="middle" fill="#309ab0" font-size="8">blob</text>
+  <g filter="url(#gR)" transform="translate(668, 530)">
+    <line x1="-4" y1="-4" x2="4" y2="4" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="4" y1="-4" x2="-4" y2="4" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round"/>
+  </g>
+  <text x="668" y="524" text-anchor="middle" fill="#ef4444" font-size="7.5" font-weight="600">NO KEY</text>
+
+  <!-- STEP 6: Decrypt -->
+  <line x1="821" y1="562" x2="821" y2="586" stroke="#34d399" stroke-width="1.5" marker-end="url(#aG)" opacity="0.6"/>
+  <rect x="716" y="592" width="210" height="50" rx="8" fill="#0f1a22" stroke="#34d399" stroke-width="1.5" filter="url(#shadow)"/>
+  <circle cx="738" cy="611" r="8" fill="#34d399" opacity="0.12" stroke="#34d399" stroke-width="1"/>
+  <text x="738" y="615" text-anchor="middle" fill="#34d399" font-size="10" font-weight="700">6</text>
+  <text x="754" y="611" fill="#34d399" font-size="11.5" font-weight="700">✓ Decrypt in browser</text>
+  <text x="754" y="628" fill="#7d8a9a" font-size="9">Plaintext revealed to recipient only</text>
+
+  <!-- STEP 7: Delete -->
+  <rect x="400" y="590" width="200" height="42" rx="8" fill="#1a0f16" stroke="#ef4444" stroke-width="1" filter="url(#shadow)" opacity="0.9"/>
+  <circle cx="422" cy="611" r="8" fill="#ef4444" opacity="0.1" stroke="#ef4444" stroke-width="1"/>
+  <text x="422" y="615" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="700">7</text>
+  <text x="438" y="608" fill="#e6eaf0" font-size="10.5" font-weight="600">Delete ciphertext</text>
+  <text x="438" y="624" fill="#ef4444" font-size="9" font-weight="500">🗑 Zero data residue</text>
+
+  <!-- LEGEND -->
+  <rect x="16" y="668" width="928" height="40" rx="6" fill="#131d30" stroke="#1b2740" stroke-width="0.8"/>
+  <rect x="36" y="681" width="14" height="14" rx="3" fill="#34d399" opacity="0.15" stroke="#34d399" stroke-width="1"/>
+  <text x="58" y="693" fill="#7d8a9a" font-size="10">Plaintext (client only)</text>
+  <rect x="196" y="681" width="14" height="14" rx="3" fill="#309ab0" opacity="0.15" stroke="#309ab0" stroke-width="1"/>
+  <text x="218" y="693" fill="#7d8a9a" font-size="10">Ciphertext (encrypted)</text>
+  <line x1="366" y1="688" x2="396" y2="688" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="404" y="693" fill="#7d8a9a" font-size="10">Out-of-band key transfer</text>
+  <g transform="translate(570, 688)">
+    <line x1="-5" y1="-5" x2="5" y2="5" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="5" y1="-5" x2="-5" y2="5" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <text x="584" y="693" fill="#7d8a9a" font-size="10">Key absent from path</text>
+  <line x1="726" y1="688" x2="756" y2="688" stroke="#7d8a9a" stroke-width="1.5" marker-end="url(#aW)"/>
+  <text x="764" y="693" fill="#7d8a9a" font-size="10">Data flow</text>
+  <line x1="846" y1="688" x2="876" y2="688" stroke="#7d8a9a" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="884" y="693" fill="#7d8a9a" font-size="10">Request</text>
+</svg>
