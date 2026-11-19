@@ -10,8 +10,8 @@
  * regardless of whether the drop exists or the token is valid, also
  * preventing existence leakage through a different mechanism.
  */
-import type { Express, Request, Response, NextFunction } from "express";
-import { createServer, type Server } from "http";
+import express, { type Express, type Request, type Response, type NextFunction } from "express";
+import type { Server } from "http";
 import { storage } from "./storage";
 import { createDropSchema, createBlogPostSchema, updateBlogPostSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
@@ -19,8 +19,8 @@ import { log } from "./index";
 import bcrypt from "bcryptjs";
 import { generateSecret, generateURI, verifySync } from "otplib";
 import QRCode from "qrcode";
-import { registerObjectStorageRoutes } from "./replit_integrations/object_storage";
-import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+import { blogUploadsEnabled, registerObjectStorageRoutes } from "./replit_integrations/object_storage";
+import rateLimit from "express-rate-limit";
 
 /**
  * Rate limiting configuration.
@@ -34,23 +34,11 @@ import rateLimit, { ipKeyGenerator } from "express-rate-limit";
  * All limiters use the in-memory store (suitable for single-server deployment).
  * Returns 429 Too Many Requests with Retry-After header when exceeded.
  *
- * Custom keyGenerator extracts real client IP from X-Forwarded-For header
- * (set by Replit's reverse proxy), falling back to req.ip.
- * Uses ipKeyGenerator helper for proper IPv6 subnet handling.
- * This ensures each visitor gets their own independent rate limit bucket.
+ * Rate limits use the address resolved by Express's trust proxy setting.
  */
-const getClientIp = (req: Request): string => {
-  const forwarded = req.headers["x-forwarded-for"];
-  let ip: string;
-  if (typeof forwarded === "string") {
-    ip = forwarded.split(",")[0].trim();
-  } else if (Array.isArray(forwarded) && forwarded.length > 0) {
-    ip = forwarded[0].split(",")[0].trim();
-  } else {
-    ip = req.ip || req.socket?.remoteAddress || "unknown";
-  }
-  return ipKeyGenerator(ip);
-};
+const parseForm = express.urlencoded({ extended: false });
+const parseSmallBody = [express.json(), parseForm];
+const parseBlogBody = [express.json({ limit: "1mb" }), parseForm];
 
 // Drop creation — 50 requests per 15 minutes per IP
 const dropCreateLimiter = rateLimit({
@@ -58,7 +46,6 @@ const dropCreateLimiter = rateLimit({
   limit: 50,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  keyGenerator: getClientIp,
   message: { error: "Too many drops created. Please try again later." },
 });
 
@@ -68,7 +55,6 @@ const adminLoginLimiter = rateLimit({
   limit: 25,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  keyGenerator: getClientIp,
   message: { error: "Too many login attempts. Please try again later." },
 });
 
@@ -78,7 +64,6 @@ const dropRetrieveLimiter = rateLimit({
   limit: 150,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  keyGenerator: getClientIp,
   message: { error: "Too many requests. Please try again later." },
 });
 
@@ -88,7 +73,6 @@ const generalApiLimiter = rateLimit({
   limit: 500,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  keyGenerator: getClientIp,
   message: { error: "Too many requests. Please try again later." },
 });
 
@@ -108,8 +92,12 @@ export async function registerRoutes(
     next();
   });
 
-  // Apply general rate limit to all API routes as a catch-all safety net
-  app.use("/api", generalApiLimiter);
+  app.use("/api", (req, res, next) => {
+    if (req.method === "POST" && /^\/drops\/?$/i.test(req.path)) {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    }
+    next();
+  }, generalApiLimiter);
 
   // CORS preflight + headers for POST /api/drops only (embeddable widget)
   app.options("/api/drops", (_req, res) => {
@@ -120,7 +108,8 @@ export async function registerRoutes(
   });
 
   // Register object storage routes for OG image uploads (admin-protected)
-  registerObjectStorageRoutes(app);
+  app.use("/objects/uploads", generalApiLimiter);
+  registerObjectStorageRoutes(app, parseSmallBody);
 
   /**
    * POST /api/drops — Creates a new encrypted drop.
@@ -128,9 +117,7 @@ export async function registerRoutes(
    * The encryption key exists only in the URL fragment returned to the creator —
    * it never touches the server (URL fragments are not sent in HTTP requests).
    */
-  app.post("/api/drops", dropCreateLimiter, async (req, res) => {
-    // Allow cross-origin requests from the embeddable widget
-    res.setHeader("Access-Control-Allow-Origin", "*");
+  app.post("/api/drops", dropCreateLimiter, express.json({ limit: "75mb" }), parseForm, async (req, res) => {
     try {
       const parsed = createDropSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -187,12 +174,11 @@ export async function registerRoutes(
   });
 
   /**
-   * POST /api/drops/:id/consume — Step 1 of two-step consume flow.
-   * Fetches ciphertext WITHOUT counting a view. The client decrypts locally,
-   * then calls /confirm if successful. This ensures network failures or
-   * wrong passwords don't waste views.
+   * POST /api/drops/:id/consume — Charges a view before releasing ciphertext.
+   * The client decrypts locally.
    */
-  app.post("/api/drops/:id/consume", dropRetrieveLimiter, async (req: Request, res: Response) => {
+  app.post("/api/drops/:id/consume", dropRetrieveLimiter, ...parseSmallBody, async (req: Request, res: Response) => {
+    res.setHeader("Cache-Control", "no-store");
     try {
       const id = req.params.id as string;
       const token = String(req.query.t || req.body?.t || "");
@@ -201,7 +187,7 @@ export async function registerRoutes(
         return res.status(404).json({ error: "consumed_or_expired" });
       }
 
-      const result = await storage.fetchDrop(id, token);
+      const result = await storage.consumeDrop(id, token);
 
       if (!result) {
         return res.status(404).json({ error: "consumed_or_expired" });
@@ -220,12 +206,9 @@ export async function registerRoutes(
   });
 
   /**
-   * POST /api/drops/:id/confirm — Step 2 of two-step consume flow.
-   * Increments view count only after successful client-side decryption.
-   * Returns remaining views. If the view limit is reached, the drop is
-   * already permanently destroyed by the storage layer.
+   * Legacy clients still call /confirm. Return remaining views without charging again.
    */
-  app.post("/api/drops/:id/confirm", dropRetrieveLimiter, async (req: Request, res: Response) => {
+  app.post("/api/drops/:id/confirm", dropRetrieveLimiter, ...parseSmallBody, async (req: Request, res: Response) => {
     try {
       const id = req.params.id as string;
       const token = String(req.query.t || req.body?.t || "");
@@ -234,13 +217,13 @@ export async function registerRoutes(
         return res.json({ remainingViews: 0 });
       }
 
-      const result = await storage.confirmView(id, token);
+      const result = await storage.getDropMeta(id, token);
 
       if (!result) {
         return res.json({ remainingViews: 0 });
       }
 
-      return res.json({ remainingViews: result.remainingViews });
+      return res.json({ remainingViews: Math.max(0, result.maxViews - result.viewCount) });
     } catch {
       log("Error confirming view");
       return res.status(500).json({ error: "Internal server error" });
@@ -250,10 +233,9 @@ export async function registerRoutes(
   /**
    * POST /api/drops/:id/burn — Emergency destroy endpoint.
    * Called when decryption fails and burn_on_fail is enabled.
-   * Permanently erases the drop on first wrong password attempt — no recovery.
-   * This is the anti-brute-force kill switch.
+   * The server can only act on a failure reported by the browser.
    */
-  app.post("/api/drops/:id/burn", dropRetrieveLimiter, async (req: Request, res: Response) => {
+  app.post("/api/drops/:id/burn", dropRetrieveLimiter, ...parseSmallBody, async (req: Request, res: Response) => {
     try {
       const id = req.params.id as string;
       const token = String(req.query.t || req.body?.t || "");
@@ -313,7 +295,7 @@ export async function registerRoutes(
    * environment variable to match the setupToken in the request body.
    * This prevents unauthorized users from claiming admin on a fresh deployment.
    */
-  app.post("/api/admin/setup", async (req, res) => {
+  app.post("/api/admin/setup", ...parseSmallBody, async (req, res) => {
     try {
       const existing = await storage.getAdminConfig();
       if (existing && existing.passwordHash) {
@@ -353,7 +335,7 @@ export async function registerRoutes(
    * Admin login — validates password + TOTP code.
    * Creates a session on success. Rate limited to 5 attempts per 15 minutes.
    */
-  app.post("/api/admin/login", adminLoginLimiter, async (req, res) => {
+  app.post("/api/admin/login", adminLoginLimiter, ...parseSmallBody, async (req, res) => {
     try {
       const config = await storage.getAdminConfig();
       if (!config || !config.passwordHash || !config.totpSecret) {
@@ -386,7 +368,8 @@ export async function registerRoutes(
 
   /** Admin session check — returns whether the current session is authenticated. */
   app.get("/api/admin/session", (req, res) => {
-    return res.json({ isAdmin: !!(req.session && req.session.isAdmin) });
+    if (!req.session?.isAdmin) return res.json({ isAdmin: false });
+    return res.json({ isAdmin: true, blogUploadsEnabled });
   });
 
   /** Admin logout — destroys the session. */
@@ -409,7 +392,7 @@ export async function registerRoutes(
   });
 
   /** Create a new blog post. Validates with Zod schema. */
-  app.post("/api/admin/blog", requireAdmin, async (req, res) => {
+  app.post("/api/admin/blog", requireAdmin, ...parseBlogBody, async (req, res) => {
     try {
       const parsed = createBlogPostSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -437,7 +420,7 @@ export async function registerRoutes(
   });
 
   /** Update a blog post by ID. Validates with partial Zod schema. */
-  app.patch("/api/admin/blog/:id", requireAdmin, async (req, res) => {
+  app.patch("/api/admin/blog/:id", requireAdmin, ...parseBlogBody, async (req, res) => {
     try {
       const parsed = updateBlogPostSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -544,9 +527,11 @@ export async function registerRoutes(
 
       const fullUrl = `https://trustdrop.com/blog/${post.slug}`;
       const ogImageRaw = post.ogImageUrl || "";
-      const ogImage = ogImageRaw.startsWith("/objects/")
-        ? `https://trustdrop.com${ogImageRaw}`
-        : ogImageRaw || "https://trustdrop.com/og-image.png";
+      const ogImage = (
+        ogImageRaw.startsWith("/") && !ogImageRaw.startsWith("//")
+          ? `https://trustdrop.com${ogImageRaw}`
+          : ogImageRaw || "https://trustdrop.com/og-image.png"
+      ).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
       const escapedTitle = post.title.replace(/"/g, "&quot;");
       const escapedExcerpt = post.excerpt.replace(/"/g, "&quot;");
 

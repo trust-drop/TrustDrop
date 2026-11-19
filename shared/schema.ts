@@ -45,12 +45,10 @@ export const drops = pgTable("drops", {
   // View-based burn rule (1-100). Drop is permanently deleted when this limit is reached.
   maxViews: integer("max_views").notNull().default(1),
 
-  // Tracks successful decryptions only (via two-step consume flow).
-  // Failed decryptions don't increment — views are only counted after client confirms.
+  // Tracks ciphertext deliveries charged by the server before release.
   viewCount: integer("view_count").notNull().default(0),
 
-  // Anti-brute-force kill switch. If enabled (1), a wrong password attempt
-  // permanently destroys the drop. No recovery possible.
+  // If enabled, a decryption failure reported by the browser burns the drop.
   burnOnFail: integer("burn_on_fail").notNull().default(1),
 });
 

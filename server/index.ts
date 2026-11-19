@@ -5,32 +5,19 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 
 const app = express();
-// Trust the reverse proxy so secure cookies work behind HTTPS in production
-app.set("trust proxy", 1);
-const httpServer = createServer(app);
-
-declare module "http" {
-  interface IncomingMessage {
-    rawBody: unknown;
-  }
+// Trust only the application-facing proxy hops that the deployment controls.
+const trustedProxyHops = Number(process.env.TRUST_PROXY_HOPS ?? (process.env.RENDER === "true" ? 1 : 0));
+if (!Number.isSafeInteger(trustedProxyHops) || trustedProxyHops < 0) {
+  throw new Error("TRUST_PROXY_HOPS must be a non-negative integer");
 }
+app.set("trust proxy", trustedProxyHops);
+const httpServer = createServer(app);
 
 declare module "express-session" {
   interface SessionData {
     isAdmin: boolean;
   }
 }
-
-app.use(
-  express.json({
-    limit: "75mb",
-    verify: (req, _res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
-
-app.use(express.urlencoded({ extended: false }));
 
 // Admin session management — uses SESSION_SECRET for signing cookies.
 // In production, SESSION_SECRET must be set or the server refuses to start.

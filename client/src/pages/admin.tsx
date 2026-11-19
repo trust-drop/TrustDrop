@@ -234,7 +234,7 @@ export default function Admin() {
     queryKey: ["/api/admin/status"],
   });
 
-  const sessionQuery = useQuery<{ isAdmin: boolean }>({
+  const sessionQuery = useQuery<{ isAdmin: boolean; blogUploadsEnabled?: boolean }>({
     queryKey: ["/api/admin/session"],
   });
 
@@ -277,7 +277,7 @@ export default function Admin() {
           </Button>
         </nav>
         <main className="max-w-4xl mx-auto px-4 py-8">
-          <AdminDashboard />
+          <AdminDashboard blogUploadsEnabled={!!sessionQuery.data?.blogUploadsEnabled} />
         </main>
       </div>
     );
@@ -301,7 +301,7 @@ export default function Admin() {
 }
 
 /** Blog post management dashboard. Lists all posts (including drafts) with edit/delete actions. */
-function AdminDashboard() {
+function AdminDashboard({ blogUploadsEnabled }: { blogUploadsEnabled: boolean }) {
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const [editingPost, setEditingPost] = useState<any | null>(null);
@@ -328,6 +328,7 @@ function AdminDashboard() {
     return (
       <BlogPostEditor
         post={editingPost}
+        blogUploadsEnabled={blogUploadsEnabled}
         onSave={() => {
           setIsCreating(false);
           setEditingPost(null);
@@ -415,9 +416,11 @@ function AdminDashboard() {
 /** Blog post editor with title, slug (auto-generated from title for new posts), excerpt, markdown body, OG image upload, tags, and publish toggle. */
 function BlogPostEditor({
   post,
+  blogUploadsEnabled,
   onSave,
   onCancel,
 }: {
+  blogUploadsEnabled: boolean;
   post: any | null;
   onSave: () => void;
   onCancel: () => void;
@@ -556,7 +559,7 @@ function BlogPostEditor({
       slug,
       excerpt,
       body,
-      ogImageUrl: ogImageUrl || undefined,
+      ogImageUrl: ogImageUrl.trim(),
       published,
       tags: parsedTags,
     });
@@ -617,28 +620,30 @@ function BlogPostEditor({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="postBody">Body (Markdown)</Label>
-            <div className="flex items-center gap-2">
-              <label
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border bg-background text-xs font-medium cursor-pointer hover:bg-muted/50 transition-colors text-muted-foreground"
-                data-testid="button-insert-image"
-              >
-                {isUploadingInline ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <ImagePlus className="w-3.5 h-3.5" />
-                )}
-                {isUploadingInline ? "Uploading..." : "Insert Image"}
-                <input
-                  ref={inlineFileRef}
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={handleInlineImageUpload}
-                  disabled={isUploadingInline}
-                  className="hidden"
-                  data-testid="input-inline-image-file"
-                />
-              </label>
-            </div>
+            {blogUploadsEnabled && (
+              <div className="flex items-center gap-2">
+                <label
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border bg-background text-xs font-medium cursor-pointer hover:bg-muted/50 transition-colors text-muted-foreground"
+                  data-testid="button-insert-image"
+                >
+                  {isUploadingInline ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <ImagePlus className="w-3.5 h-3.5" />
+                  )}
+                  {isUploadingInline ? "Uploading..." : "Insert Image"}
+                  <input
+                    ref={inlineFileRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={handleInlineImageUpload}
+                    disabled={isUploadingInline}
+                    className="hidden"
+                    data-testid="input-inline-image-file"
+                  />
+                </label>
+              </div>
+            )}
           </div>
           <textarea
             ref={bodyRef}
@@ -664,7 +669,13 @@ function BlogPostEditor({
         </div>
 
         <div className="space-y-2">
-          <Label>OG Image (optional, recommended 1200x630px)</Label>
+          <Label htmlFor="postOgImageUrl">OG Image (optional, recommended 1200x630px)</Label>
+          <Input
+            id="postOgImageUrl"
+            value={ogImageUrl}
+            onChange={(event) => setOgImageUrl(event.target.value)}
+            placeholder="/blog-images/example.png or https://…"
+          />
           {ogImageUrl ? (
             <div className="flex items-center gap-3 p-3 rounded-md border border-border bg-muted/30">
               <ImageIcon className="w-5 h-5 text-muted-foreground shrink-0" />
@@ -681,7 +692,7 @@ function BlogPostEditor({
                 <X className="w-4 h-4" />
               </Button>
             </div>
-          ) : (
+          ) : blogUploadsEnabled && (
             <div className="flex items-center gap-3">
               <label
                 className="flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-background text-sm cursor-pointer hover:bg-muted/50 transition-colors"

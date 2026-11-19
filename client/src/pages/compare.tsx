@@ -90,7 +90,7 @@ const tableData: TableRow[] = [
   {
     feature: "View Counting",
     cells: [
-      { chip: { color: "green", label: "Two-step consume" }, detail: "View only counted after successful decryption is confirmed. Failed attempts don't waste views." },
+      { chip: { color: "green", label: "On delivery" }, detail: "The server charges one view before releasing ciphertext." },
       { chip: { color: "red", label: "On access" }, detail: "View counted when the link is opened, regardless of whether the passphrase is correct." },
       { chip: { color: "red", label: "On access" }, detail: "\"Burn after reading\" triggers on first access, even if decryption fails." },
       { chip: { color: "red", label: "On access" }, detail: "Access count increments when the link is opened, before the content is viewed." },
@@ -99,7 +99,7 @@ const tableData: TableRow[] = [
   {
     feature: "Wrong-Password Burn",
     cells: [
-      { chip: { color: "green", label: "Yes" }, detail: "Optional. A single wrong password permanently destroys the drop. Ultimate anti-brute-force." },
+      { chip: { color: "green", label: "Yes" }, detail: "Optional. A decryption failure reported by the browser deletes any remaining views." },
       { chip: { color: "red", label: "No" } },
       { chip: { color: "red", label: "No" } },
       { chip: { color: "red", label: "No" } },
@@ -182,7 +182,7 @@ const deepDives: DeepDive[] = [
     tag: "trustdrop",
     tagLabel: "TrustDrop",
     title: "Security-first secret sharing",
-    description: "TrustDrop is purpose-built for one thing: sharing secrets with the strongest possible security guarantees. The three-part URL means compromising any single component (database, server logs, network traffic) doesn't expose your secret. The two-step consume flow means network glitches and wrong passwords don't burn your views. Wrong-password burn is a kill switch no other tool offers. And the entire codebase is open source under AGPL-3.0 — every zero-knowledge claim is verifiable by reading the code.",
+    description: "TrustDrop is purpose-built for one thing: sharing secrets with the strongest possible security guarantees. The three-part URL means compromising any single component (database, server logs, network traffic) doesn't expose your secret. The server enforces view limits on delivery. The browser can report failed decryption to burn any remaining views. And the entire codebase is open source under AGPL-3.0 — every zero-knowledge claim is verifiable by reading the code.",
   },
   {
     tag: "ots",
@@ -224,7 +224,7 @@ const useCases: UseCase[] = [
   {
     title: "Internal tool for your company, self-hosted",
     recommendation: "TrustDrop or PrivateBin",
-    description: "TrustDrop is open source (AGPL-3.0) and self-hostable with stronger security features out of the box \u2014 three-part URLs, two-step consume, and wrong-password burn. PrivateBin is a solid alternative if you want extras like syntax highlighting and comments.",
+    description: "TrustDrop is open source (AGPL-3.0) and self-hostable with stronger security features out of the box \u2014 three-part URLs, server-enforced view limits, and browser-reported wrong-password burn. PrivateBin is a solid alternative if you want extras like syntax highlighting and comments.",
   },
   {
     title: "Sending encrypted files to a colleague",
@@ -275,7 +275,7 @@ export default function Compare() {
             All four tools encrypt your data and let you share it via a link. The differences are in <strong className="text-foreground">where encryption happens</strong>, <strong className="text-foreground">how burn rules work</strong>, and <strong className="text-foreground">what the recipient needs</strong> to open the secret.
           </p>
           <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">TrustDrop</strong> is the only tool that combines true client-side zero-knowledge encryption with a two-step consume flow (views aren't wasted on failures), wrong-password burn protection, and a three-part URL that keeps the encryption key completely off the server.
+            <strong className="text-foreground">TrustDrop</strong> is the only tool that combines true client-side zero-knowledge encryption with server-enforced view limits, browser-reported wrong-password burn, and a three-part URL that keeps the encryption key completely off the server.
           </p>
         </Card>
 

@@ -88,6 +88,7 @@ export default function Retrieve() {
   const [timeLeft, setTimeLeft] = useState(300);
   const [copied, setCopied] = useState(false);
   const [remainingViews, setRemainingViews] = useState(0);
+  const consumingRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const destroyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -157,14 +158,9 @@ export default function Retrieve() {
     };
   }, [state]);
 
-  /**
-   * Two-step consume flow:
-   * 1) Fetch ciphertext via /consume (no view counted),
-   * 2) Decrypt locally,
-   * 3) On success: /confirm increments view count,
-   * 4) On failure: /burn destroys if burn_on_fail enabled
-   */
   const handleConsume = useCallback(async () => {
+    if (consumingRef.current) return;
+    consumingRef.current = true;
     setState("consuming");
 
     try {
@@ -175,7 +171,8 @@ export default function Retrieve() {
         return;
       }
       const data = await res.json();
-      const { ciphertext_b64, meta: dropMeta } = data;
+      const { ciphertext_b64, meta: dropMeta, maxViews, viewCount } = data;
+      const viewsLeft = Math.max(0, maxViews - viewCount);
 
       const keyFromHash = getKeyFromHash();
 
@@ -204,28 +201,25 @@ export default function Retrieve() {
           setDecryptedText(text);
         }
 
-        const confirmRes = await fetch(`/api/drops/${id}/confirm?t=${encodeURIComponent(token)}`, { method: "POST" });
-        const confirmData = await confirmRes.json();
-        setRemainingViews(confirmData.remainingViews ?? 0);
-
+        setRemainingViews(viewsLeft);
         setMeta(dropMeta);
         setState("decrypted");
-      } catch (decryptErr: any) {
-        try {
-          await fetch(`/api/drops/${id}/burn?t=${encodeURIComponent(token)}`, { method: "POST" });
-        } catch {}
-
-        if (
-          decryptErr.message?.includes("decrypt") ||
-          decryptErr.name === "OperationError"
-        ) {
-          setState("burned");
-        } else {
-          setState("decrypt-error");
+      } catch {
+        let burned = viewsLeft === 0;
+        if (!burned) {
+          try {
+            const response = await fetch(`/api/drops/${id}/burn?t=${encodeURIComponent(token)}`, { method: "POST" });
+            burned = response.ok && (await response.json()).burned === true;
+          } catch {
+            // Report the decryption failure even if delivery of the burn request failed.
+          }
         }
+        setState(burned ? "burned" : "decrypt-error");
       }
-    } catch (error: any) {
+    } catch {
       setState("error");
+    } finally {
+      consumingRef.current = false;
     }
   }, [id, password, getKeyFromHash, getAccessToken]);
 
@@ -318,8 +312,7 @@ export default function Retrieve() {
             </h1>
           </div>
           <p className="text-muted-foreground text-center mb-8 max-w-sm">
-            The password was incorrect. As a security measure, this drop has been
-            permanently destroyed to prevent brute-force attacks.
+            Decryption failed, and this drop is no longer available.
           </p>
           <Button
             onClick={() => navigate("/")}
@@ -346,8 +339,8 @@ export default function Retrieve() {
             Decryption Failed
           </h1>
           <p className="text-muted-foreground text-center mb-8 max-w-sm">
-            The password was incorrect or the data was corrupted. The drop has
-            been permanently destroyed.
+            The password may be incorrect or the data may be corrupted. This
+            delivery used one view.
           </p>
           <Button
             onClick={() => navigate("/")}
