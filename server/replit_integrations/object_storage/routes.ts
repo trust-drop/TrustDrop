@@ -75,8 +75,8 @@ export function registerObjectStorageRoutes(app: Express): void {
         // Echo back the metadata for client convenience
         metadata: { name, size, contentType },
       });
-    } catch (error) {
-      console.error("Error generating upload URL:", error);
+    } catch {
+      console.error("Error generating upload URL");
       res.status(500).json({ error: "Failed to generate upload URL" });
     }
   });
