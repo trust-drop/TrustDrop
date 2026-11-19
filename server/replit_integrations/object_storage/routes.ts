@@ -1,5 +1,8 @@
-import type { Express } from "express";
-import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import type { Express, RequestHandler } from "express";
+import { ObjectStorageService, ObjectNotFoundError, blogImageTypes, maxBlogImageBytes } from "./objectStorage";
+
+export const blogUploadsEnabled = Boolean(process.env.PRIVATE_OBJECT_DIR?.trim())
+  && process.env.ENABLE_BLOG_IMAGE_UPLOADS === "true";
 
 /**
  * Register object storage routes for file uploads.
@@ -13,7 +16,7 @@ import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
  * - Add file metadata storage (save to database after upload)
  * - Add ACL policies for access control
  */
-export function registerObjectStorageRoutes(app: Express): void {
+export function registerObjectStorageRoutes(app: Express, parseBody: RequestHandler[]): void {
   const objectStorageService = new ObjectStorageService();
 
   /**
@@ -39,26 +42,27 @@ export function registerObjectStorageRoutes(app: Express): void {
     if (!req.session?.isAdmin) {
       return res.status(401).json({ error: "Unauthorized" });
     }
+    if (!blogUploadsEnabled) {
+      return res.status(403).json({ error: "Direct blog image uploads are disabled" });
+    }
     next();
-  }, async (req, res) => {
+  }, ...parseBody, async (req, res) => {
     try {
-      const { name, size, contentType } = req.body;
+      const { name, size, contentType } = req.body ?? {};
 
-      if (!name) {
+      if (typeof name !== "string" || !name.trim()) {
         return res.status(400).json({
           error: "Missing required field: name",
         });
       }
 
-      const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
-      if (contentType && !allowedTypes.includes(contentType)) {
+      if (!blogImageTypes.includes(contentType)) {
         return res.status(400).json({
           error: "Only PNG, JPEG, and WebP images are allowed",
         });
       }
 
-      const maxSize = 5 * 1024 * 1024;
-      if (size && size > maxSize) {
+      if (!Number.isSafeInteger(size) || size < 1 || size > maxBlogImageBytes) {
         return res.status(400).json({
           error: "File size must be under 5 MB",
         });
@@ -91,10 +95,13 @@ export function registerObjectStorageRoutes(app: Express): void {
    */
   app.get("/objects/uploads/:id", async (req, res) => {
     try {
+      if (!process.env.PRIVATE_OBJECT_DIR?.trim()) {
+        return res.status(404).json({ error: "Object not found" });
+      }
       const objectFile = await objectStorageService.getObjectEntityFile(`/objects/uploads/${req.params.id}`);
       await objectStorageService.downloadObject(objectFile, res);
     } catch (error) {
-      console.error("Error serving object:", error);
+      console.error("Error serving blog image");
       if (error instanceof ObjectNotFoundError) {
         return res.status(404).json({ error: "Object not found" });
       }

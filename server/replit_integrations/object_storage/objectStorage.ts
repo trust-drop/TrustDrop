@@ -11,6 +11,25 @@ import {
 
 const REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
 
+export const blogImageTypes = ["image/png", "image/jpeg", "image/webp"];
+export const maxBlogImageBytes = 5 * 1024 * 1024;
+
+function getBlogImageType(image: Buffer): string | undefined {
+  if (image.length >= 33 && image.subarray(0, 8).equals(Buffer.from("89504e470d0a1a0a", "hex"))
+    && image.toString("latin1", 12, 16) === "IHDR" && image.toString("latin1", image.length - 8, image.length - 4) === "IEND") {
+    return "image/png";
+  }
+  if (image.length >= 4 && image[0] === 0xff && image[1] === 0xd8 && image[2] === 0xff
+    && image[image.length - 2] === 0xff && image[image.length - 1] === 0xd9) {
+    return "image/jpeg";
+  }
+  if (image.length >= 20 && image.toString("latin1", 0, 4) === "RIFF"
+    && image.toString("latin1", 8, 12) === "WEBP" && image.readUInt32LE(4) === image.length - 8
+    && ["VP8 ", "VP8L", "VP8X"].includes(image.toString("latin1", 12, 16))) {
+    return "image/webp";
+  }
+}
+
 // The object storage client is used to interact with the object storage service.
 export const objectStorageClient = new Storage({
   credentials: {
@@ -94,40 +113,39 @@ export class ObjectStorageService {
     return null;
   }
 
-  // Downloads an object to the response.
+  // Serve only bounded, recognized raster content, regardless of storage metadata.
   async downloadObject(file: File, res: Response, cacheTtlSec: number = 3600) {
-    try {
-      // Get file metadata
-      const [metadata] = await file.getMetadata();
-      // Get the ACL policy for the object.
-      const aclPolicy = await getObjectAclPolicy(file);
-      const isPublic = aclPolicy?.visibility === "public";
-      // Set appropriate headers
-      res.set({
-        "Content-Type": metadata.contentType || "application/octet-stream",
-        "Content-Length": metadata.size,
-        "Cache-Control": `${
-          isPublic ? "public" : "private"
-        }, max-age=${cacheTtlSec}`,
-      });
-
-      // Stream the file to the response
-      const stream = file.createReadStream();
-
-      stream.on("error", (err) => {
-        console.error("Stream error:", err);
-        if (!res.headersSent) {
-          res.status(500).json({ error: "Error streaming file" });
-        }
-      });
-
-      stream.pipe(res);
-    } catch (error) {
-      console.error("Error downloading file:", error);
-      if (!res.headersSent) {
-        res.status(500).json({ error: "Error downloading file" });
-      }
+    const [metadata] = await file.getMetadata();
+    const size = Number(metadata.size);
+    if (!Number.isSafeInteger(size) || size < 1 || size > maxBlogImageBytes) {
+      return res.status(404).json({ error: "Object not found" });
     }
+
+    const chunks: Buffer[] = [];
+    let bytes = 0;
+    const stream = file.createReadStream({ decompress: false });
+    for await (const chunk of stream) {
+      const buffer = Buffer.from(chunk);
+      bytes += buffer.length;
+      if (bytes > size) {
+        return res.status(404).json({ error: "Object not found" });
+      }
+      chunks.push(buffer);
+    }
+    const image = Buffer.concat(chunks, bytes);
+    const type = bytes === size ? getBlogImageType(image) : undefined;
+    if (!type) {
+      return res.status(404).json({ error: "Object not found" });
+    }
+
+    const aclPolicy = await getObjectAclPolicy(file);
+    res.set({
+      "Content-Type": type,
+      "Content-Length": String(image.length),
+      "Content-Security-Policy": "sandbox; default-src 'none'",
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": `${aclPolicy?.visibility === "public" ? "public" : "private"}, max-age=${cacheTtlSec}`,
+    }).end(image);
   }
 
   // Gets the upload URL for an object entity.

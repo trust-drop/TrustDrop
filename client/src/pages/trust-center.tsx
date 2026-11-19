@@ -233,7 +233,7 @@ export default function TrustCenter() {
                 icon={Eye}
                 title="View Limit Reached"
                 accent="red"
-                description="After the configured number of successful decryptions (default: 1), the ciphertext is permanently destroyed. Each confirmed view decrements the counter."
+                description="Each ciphertext delivery uses one view. The server deletes the stored ciphertext when it charges the final view."
               />
               <InfoCard
                 icon={Clock}
@@ -245,7 +245,7 @@ export default function TrustCenter() {
                 icon={Flame}
                 title="Wrong Password"
                 accent="red"
-                description="If auto-destruct on wrong password is enabled, a single failed decryption attempt immediately and permanently destroys the drop."
+                description="If enabled, the server deletes the drop when the browser reports a decryption failure. Offline attempts cannot trigger deletion."
               />
             </div>
             <Card className="p-4 mt-4 border-red-500/30">

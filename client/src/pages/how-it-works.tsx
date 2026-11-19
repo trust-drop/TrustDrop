@@ -110,7 +110,7 @@ export default function HowItWorks() {
                 items={[
                   "Extracts the encryption key from the URL fragment (never sent to the server)",
                   "Two-step consume: fetch ciphertext, decrypt locally, then confirm success",
-                  "Drop is destroyed after rules are met (views exhausted, time expired, or wrong password)",
+                  "Drop is destroyed after rules are met (views exhausted, time expired, or a browser-reported decryption failure)",
                 ]}
               />
             </div>
@@ -157,15 +157,15 @@ export default function HowItWorks() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-foreground mb-2" data-testid="text-section-consume">Two-Step Consume Flow</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-2" data-testid="text-section-consume">Drop Delivery and Decryption</h2>
             <p className="text-sm text-muted-foreground mb-5">
-              Views are only counted after successful decryption, so network errors or wrong passwords don't waste your view count.
+              A view is charged before the server sends the encrypted content. A failed decryption or an interrupted delivery can use a view.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               <Card className="p-4" data-testid="card-phase-fetch">
                 <div className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2" data-testid="text-phase-fetch">Phase 1 &mdash; Fetch</div>
                 <p className="text-sm text-muted-foreground">
-                  The recipient's browser calls <code className="text-xs bg-muted px-1 py-0.5 rounded">/consume</code> to download the encrypted ciphertext. No view is counted yet.
+                  The recipient's browser calls <code className="text-xs bg-muted px-1 py-0.5 rounded">/consume</code> to download the encrypted ciphertext. The server counts the view before sending the response.
                 </p>
               </Card>
               <Card className="p-4" data-testid="card-phase-decrypt">
@@ -175,9 +175,9 @@ export default function HowItWorks() {
                 </p>
               </Card>
               <Card className="p-4" data-testid="card-phase-confirm">
-                <div className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2" data-testid="text-phase-confirm">Phase 3 &mdash; Confirm</div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2" data-testid="text-phase-confirm">Phase 3 &mdash; Burn on Failure</div>
                 <p className="text-sm text-muted-foreground">
-                  Only after successful decryption does the browser call <code className="text-xs bg-muted px-1 py-0.5 rounded">/confirm</code> to increment the view count. If max views are reached, the drop is destroyed.
+                  If decryption fails, the browser can report it to the server. With burn-on-failure enabled, a reported failure destroys any remaining views.
                 </p>
               </Card>
             </div>
@@ -197,12 +197,12 @@ export default function HowItWorks() {
               <FeatureCard
                 icon={Eye}
                 title="View Count Limit"
-                description="Allow between 1 and 50 successful decryptions. Each confirmed view decrements the counter. When it hits zero, the ciphertext is destroyed."
+                description="Allow between 1 and 50 deliveries. Each delivery uses one view. The server deletes the stored ciphertext when it charges the final view."
               />
               <FeatureCard
                 icon={Flame}
                 title="Wrong Password Burn"
-                description="If enabled, a single failed decryption attempt (wrong password) immediately and permanently destroys the drop. No second chances."
+                description="If enabled, the server deletes the drop when the browser reports a decryption failure. Offline attempts cannot trigger deletion."
               />
             </div>
           </section>

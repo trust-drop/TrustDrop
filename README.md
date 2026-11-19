@@ -21,7 +21,7 @@
 
 TrustDrop lets you share sensitive information — passwords, API keys, credentials, private messages, or files up to 50 MB — without ever trusting the server.
 
-Everything is encrypted in your browser using **AES-256-GCM** before it leaves your device. The server only ever sees ciphertext. When the recipient opens the link and decrypts the content, the ciphertext is permanently destroyed. No accounts required. No logs. No trust needed.
+Everything is encrypted in your browser using **AES-256-GCM** before it leaves your device. The server only ever sees ciphertext. The server counts a view when it releases encrypted content and deletes the stored ciphertext once the view limit is reached. No accounts required. No logs. No trust needed.
 
 ## How It Works
 
@@ -32,7 +32,7 @@ Everything is encrypted in your browser using **AES-256-GCM** before it leaves y
 ## Key Features
 
 - **Zero-knowledge encryption** — AES-256-GCM encryption happens entirely in the browser via the WebCrypto API. The server never has access to your encryption keys or plaintext data.
-- **Configurable destruction** — Set secrets to self-destruct after a single view, up to 50 views, a time limit (1 hour to 30 days), or a wrong password attempt.
+- **Configurable destruction** — Set secrets to self-destruct after a single view, up to 50 views, a time limit (1 hour to 30 days), or a decryption failure reported by the recipient’s browser.
 - **File support** — Upload and encrypt files up to 50 MB, not just text.
 - **Password protection** — Optionally require a password using PBKDF2 with 310,000 iterations for key derivation.
 - **No accounts** — No sign-up, no login, completely anonymous.
@@ -58,14 +58,11 @@ TrustDrop is designed so that even a compromised server cannot read your secrets
 - **Mode A (no password):** A random 256-bit key is generated and placed in the URL fragment (`#k=base64url(key)`). The fragment is never sent to the server — only the recipient's browser can read it.
 - **Mode B (password):** The encryption key is derived from the recipient's password using PBKDF2 with SHA-256 and 310,000 iterations. A random 16-byte salt is stored alongside the ciphertext.
 
-### Two-Step Consume Flow
+### Drop Delivery and Decryption
 
-To prevent counting failed decryption attempts as views:
-
-1. Client fetches ciphertext via `/consume` (view count not incremented)
-2. Client decrypts locally in the browser
-3. On success: client calls `/confirm` to increment the view count
-4. On failure with burn-on-fail enabled: client calls `/burn` to destroy the drop
+1. The server charges one view before returning ciphertext from `/consume`. It deletes the drop when the last view is charged. An interrupted delivery can use a view.
+2. The browser decrypts locally. If decryption fails, the browser can ask `/burn` to delete any remaining views when burn-on-fail is enabled. The server cannot observe offline attempts.
+3. Older clients can still call `/confirm` to read the remaining views.
 
 ## Tech Stack
 
@@ -109,9 +106,9 @@ All endpoints (except create) require an access token via `?t={accessToken}`.
 |--------|----------|-------------|
 | `POST` | `/api/drops` | Create a new encrypted drop |
 | `GET` | `/api/drops/:id/meta?t={token}` | Check if drop exists, get metadata |
-| `POST` | `/api/drops/:id/consume?t={token}` | Fetch ciphertext (no view count) |
-| `POST` | `/api/drops/:id/confirm?t={token}` | Confirm successful decryption |
-| `POST` | `/api/drops/:id/burn?t={token}` | Destroy drop (wrong password) |
+| `POST` | `/api/drops/:id/consume?t={token}` | Fetch ciphertext and charge one view |
+| `POST` | `/api/drops/:id/confirm?t={token}` | Read remaining views for legacy clients |
+| `POST` | `/api/drops/:id/burn?t={token}` | Request deletion after a browser-reported decryption failure |
 
 ### Admin Endpoints
 
@@ -125,6 +122,8 @@ All endpoints (except create) require an access token via `?t={accessToken}`.
 
 ### Blog Endpoints
 
+Direct blog image uploads require `PRIVATE_OBJECT_DIR` and `ENABLE_BLOG_IMAGE_UPLOADS=true`. Static and externally hosted images can be referenced by URL.
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/blog` | List published posts |
@@ -135,6 +134,8 @@ All endpoints (except create) require an access token via `?t={accessToken}`.
 | `DELETE` | `/api/admin/blog/:id` | Delete post (admin) |
 
 ### Rate Limits
+
+On Render the app trusts one upstream proxy hop. Other deployments trust the direct connection by default. If self-hosting behind a reverse proxy, set `TRUST_PROXY_HOPS` to the number of trusted hops and keep the application port inaccessible to direct public traffic.
 
 All limits are per-IP address with a 15-minute window:
 

@@ -47,8 +47,7 @@ export interface IStorage {
     burnOnFail: boolean
   ): Promise<{ id: string; accessToken: string }>;
   getDropMeta(id: string, accessToken: string): Promise<{ meta: DropMeta; maxViews: number; viewCount: number } | null>;
-  fetchDrop(id: string, accessToken: string): Promise<{ ciphertext_b64: string; meta: DropMeta; maxViews: number; viewCount: number } | null>;
-  confirmView(id: string, accessToken: string): Promise<{ remainingViews: number } | null>;
+  consumeDrop(id: string, accessToken: string): Promise<{ ciphertext_b64: string; meta: DropMeta; maxViews: number; viewCount: number } | null>;
   burnDrop(id: string, accessToken: string): Promise<boolean>;
   cleanupExpired(): Promise<number>;
   incrementDropCount(): Promise<void>;
@@ -114,16 +113,15 @@ export class DatabaseStorage implements IStorage {
       return null;
     }
 
+    if (row.viewCount >= row.maxViews) return null;
     return { meta: row.meta, maxViews: row.maxViews, viewCount: row.viewCount };
   }
 
   /**
-   * Part 1 of the two-step consume flow. Uses SELECT FOR UPDATE to lock the row
-   * during the transaction. Returns ciphertext WITHOUT incrementing view count.
-   * This ensures network failures or wrong passwords don't waste views.
-   * The client decrypts locally, then calls confirmView only on success.
+   * Charge one view before returning ciphertext. The row lock serializes releases.
+   * A delivery attempt can spend a view even when the client cannot decrypt it.
    */
-  async fetchDrop(
+  async consumeDrop(
     id: string,
     accessToken: string
   ): Promise<{ ciphertext_b64: string; meta: DropMeta; maxViews: number; viewCount: number } | null> {
@@ -131,89 +129,32 @@ export class DatabaseStorage implements IStorage {
     try {
       await client.query("BEGIN");
 
-      // SELECT FOR UPDATE locks the row to prevent concurrent access
-      const selectResult = await client.query(
-        'SELECT ciphertext_b64, meta, expires_at, max_views, view_count, access_token FROM drops WHERE id = $1 FOR UPDATE',
-        [id]
+      const { rows } = await client.query(
+        'SELECT ciphertext_b64, meta, expires_at, max_views, view_count FROM drops WHERE id = $1 AND access_token = $2 FOR UPDATE',
+        [id, accessToken]
       );
 
-      if (selectResult.rows.length === 0) {
+      const row = rows[0];
+      if (!row) {
         await client.query("ROLLBACK");
         return null;
       }
 
-      const row = selectResult.rows[0];
-
-      // Uniform null return — same response for wrong token as not-found
-      if (row.access_token !== accessToken) {
-        await client.query("ROLLBACK");
-        return null;
-      }
-
-      // Clean up expired drops on access
-      if (new Date(row.expires_at) < new Date()) {
+      if (new Date(row.expires_at) <= new Date() || row.view_count >= row.max_views) {
         await client.query("DELETE FROM drops WHERE id = $1", [id]);
         await client.query("COMMIT");
         return null;
       }
 
-      await client.query("COMMIT");
-
-      return {
-        ciphertext_b64: row.ciphertext_b64,
-        meta: row.meta as DropMeta,
-        maxViews: row.max_views,
-        viewCount: row.view_count,
-      };
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    } finally {
-      client.release();
-    }
-  }
-
-  /**
-   * Part 2 of the two-step consume flow. Called only after the client
-   * successfully decrypts. Uses SELECT FOR UPDATE for atomic view counting.
-   * If maxViews reached, permanently deletes the drop — it cannot be recovered.
-   */
-  async confirmView(id: string, accessToken: string): Promise<{ remainingViews: number } | null> {
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
-
-      // Lock row for atomic view count increment
-      const selectResult = await client.query(
-        'SELECT max_views, view_count, access_token FROM drops WHERE id = $1 FOR UPDATE',
-        [id]
-      );
-
-      if (selectResult.rows.length === 0) {
-        await client.query("ROLLBACK");
-        return null;
-      }
-
-      const row = selectResult.rows[0];
-
-      if (row.access_token !== accessToken) {
-        await client.query("ROLLBACK");
-        return null;
-      }
-
-      const newViewCount = row.view_count + 1;
-      const remainingViews = row.max_views - newViewCount;
-
-      if (remainingViews <= 0) {
-        // Max views reached — permanently delete the drop
+      const viewCount = row.view_count + 1;
+      if (viewCount >= row.max_views) {
         await client.query("DELETE FROM drops WHERE id = $1", [id]);
       } else {
-        await client.query("UPDATE drops SET view_count = $1 WHERE id = $2", [newViewCount, id]);
+        await client.query("UPDATE drops SET view_count = $1 WHERE id = $2", [viewCount, id]);
       }
-
       await client.query("COMMIT");
 
-      return { remainingViews: Math.max(0, remainingViews) };
+      return { ciphertext_b64: row.ciphertext_b64, meta: row.meta, maxViews: row.max_views, viewCount };
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;
@@ -223,9 +164,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   /**
-   * Anti-brute-force kill switch. Called when client-side decryption fails
-   * (wrong password). If burn_on_fail is enabled, permanently deletes the
-   * drop — there's no recovery. One wrong attempt = total destruction.
+   * Honor browser-reported decryption failures when burn_on_fail is enabled.
    */
   async burnDrop(id: string, accessToken: string): Promise<boolean> {
     const client = await pool.connect();

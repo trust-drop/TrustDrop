@@ -17,5 +17,5 @@ export {
   setObjectAclPolicy,
 } from "./objectAcl";
 
-export { registerObjectStorageRoutes } from "./routes";
+export { blogUploadsEnabled, registerObjectStorageRoutes } from "./routes";
 
