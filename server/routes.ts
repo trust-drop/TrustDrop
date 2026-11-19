@@ -148,8 +148,8 @@ export async function registerRoutes(
       );
 
       return res.json({ id, accessToken });
-    } catch (error: any) {
-      log(`Error creating drop: ${error.message}`);
+    } catch {
+      log("Error creating drop");
       return res.status(500).json({ error: "Internal server error" });
     }
   });
@@ -180,8 +180,8 @@ export async function registerRoutes(
         maxViews: result.maxViews,
         viewCount: result.viewCount,
       });
-    } catch (error: any) {
-      log(`Error getting drop meta: ${error.message}`);
+    } catch {
+      log("Error getting drop meta");
       return res.status(500).json({ error: "Internal server error" });
     }
   });
@@ -213,8 +213,8 @@ export async function registerRoutes(
         maxViews: result.maxViews,
         viewCount: result.viewCount,
       });
-    } catch (error: any) {
-      log(`Error fetching drop: ${error.message}`);
+    } catch {
+      log("Error fetching drop");
       return res.status(500).json({ error: "Internal server error" });
     }
   });
@@ -241,8 +241,8 @@ export async function registerRoutes(
       }
 
       return res.json({ remainingViews: result.remainingViews });
-    } catch (error: any) {
-      log(`Error confirming view: ${error.message}`);
+    } catch {
+      log("Error confirming view");
       return res.status(500).json({ error: "Internal server error" });
     }
   });
@@ -265,8 +265,8 @@ export async function registerRoutes(
       const burned = await storage.burnDrop(id, token);
 
       return res.json({ burned });
-    } catch (error: any) {
-      log(`Error burning drop: ${error.message}`);
+    } catch {
+      log("Error burning drop");
       return res.status(500).json({ error: "Internal server error" });
     }
   });
@@ -301,8 +301,8 @@ export async function registerRoutes(
       const config = await storage.getAdminConfig();
       const isSetup = !!(config && config.passwordHash && config.totpSecret);
       return res.json({ isSetup });
-    } catch (error: any) {
-      log(`Admin status error: ${error.message}`);
+    } catch {
+      log("Admin status error");
       return res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -343,8 +343,8 @@ export async function registerRoutes(
       await storage.setAdminConfig(passwordHash, secret);
 
       return res.json({ qrCodeDataUrl, totpSecret: secret });
-    } catch (error: any) {
-      log(`Admin setup error: ${error.message}`);
+    } catch {
+      log("Admin setup error");
       return res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -367,15 +367,19 @@ export async function registerRoutes(
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      const totpValid = verifySync({ secret: config.totpSecret, token: totpCode || "" });
-      if (!totpValid) {
+      if (
+        typeof totpCode !== "string" ||
+        totpCode.length !== 6 ||
+        /\D/.test(totpCode) ||
+        verifySync({ secret: config.totpSecret, token: totpCode }).valid !== true
+      ) {
         return res.status(401).json({ message: "Invalid TOTP code" });
       }
 
       req.session.isAdmin = true;
       return res.json({ success: true });
-    } catch (error: any) {
-      log(`Admin login error: ${error.message}`);
+    } catch {
+      log("Admin login error");
       return res.status(500).json({ message: "Internal server error" });
     }
   });
