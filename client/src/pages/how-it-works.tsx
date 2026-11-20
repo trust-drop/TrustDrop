@@ -73,6 +73,26 @@ export default function HowItWorks() {
         </p>
 
         <div className="max-w-4xl mx-auto space-y-12">
+          <section aria-labelledby="trustdrop-demo-title">
+            <h2 id="trustdrop-demo-title" className="text-xl font-semibold text-foreground mb-2">
+              Watch the TrustDrop demo
+            </h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              See how to set a password and view limit, share a drop, and open it as the recipient.
+            </p>
+            <video
+              aria-labelledby="trustdrop-demo-title"
+              className="block w-full aspect-video rounded-xl border border-border/50 bg-black"
+              controls
+              playsInline
+              preload="none"
+              poster="/video/trustdrop-demo-poster.jpg"
+            >
+              <source src="/video/trustdrop-demo.mp4" type="video/mp4" />
+              <track kind="captions" src="/video/trustdrop-demo.en.vtt" srcLang="en" label="English" />
+              <a href="/video/trustdrop-demo.mp4">Download the TrustDrop demo</a>
+            </video>
+          </section>
 
           <section>
             <h2 className="text-xl font-semibold text-foreground mb-2" data-testid="text-section-flow">The Three-Step Flow</h2>
@@ -108,8 +128,8 @@ export default function HowItWorks() {
                 icon={Unlock}
                 zone="trusted"
                 items={[
-                  "Extracts the encryption key from the URL fragment (never sent to the server)",
-                  "Two-step consume: fetch ciphertext, decrypt locally, then confirm success",
+                  "Gets the encryption key from the link fragment or derives it from the password",
+                  "Decrypts locally after the server charges a view and sends the ciphertext",
                   "Drop is destroyed after rules are met (views exhausted, time expired, or a browser-reported decryption failure)",
                 ]}
               />
