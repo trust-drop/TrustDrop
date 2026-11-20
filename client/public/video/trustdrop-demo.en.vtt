@@ -1,0 +1,61 @@
+WEBVTT
+
+00:00.220 --> 00:03.937
+Trust Drop lets you set the ground rules for an encrypted link.
+
+00:03.937 --> 00:08.274
+Here’s how to share a sample message with a password and a one-view limit.
+
+00:08.984 --> 00:11.070
+Start with a message or file.
+
+00:11.070 --> 00:13.156
+I’ll enter a short sample message.
+
+00:14.164 --> 00:18.030
+Under Expires In, choose how long the link stays available.
+
+00:18.030 --> 00:20.350
+I’ll leave it at twenty-four hours.
+
+00:20.350 --> 00:24.603
+Under Max Views Before Burn, choose how many deliveries to allow.
+
+00:24.603 --> 00:26.536
+I’ll use one view here.
+
+00:27.246 --> 00:32.168
+Add a password for extra protection and share it separately from the link.
+
+00:32.168 --> 00:35.576
+Under Wrong Password, choose Burn Immediately or Allow Retry.
+
+00:35.576 --> 00:42.392
+A retry is possible only if views remain, because a delivery uses a view even if decryption fails.
+
+00:43.102 --> 00:44.605
+Select Create Secure Drop.
+
+00:44.605 --> 00:47.611
+Trust Drop encrypts the message in your browser.
+
+00:47.611 --> 00:51.369
+Copy the link and send it to the intended recipient.
+
+00:52.079 --> 00:55.992
+The recipient enters the password and selects Decrypt Message.
+
+00:55.992 --> 00:58.601
+Their browser decrypts the drop locally.
+
+00:59.311 --> 01:01.310
+That used the one allowed view.
+
+01:01.310 --> 01:05.310
+Open the same link again, and the drop is no longer available.
+
+01:06.880 --> 01:09.504
+For a deeper look, visit the How It Works page.
+
+01:09.764 --> 01:13.433
+Or go to Trust Drop dot com and create your first drop today.
